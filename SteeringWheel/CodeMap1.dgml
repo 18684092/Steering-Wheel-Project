@@ -1,41 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DirectedGraph DataVirtualized="True" Layout="Sugiyama" ZoomLevel="-1" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
   <Nodes>
-    <Node Id="(@1 @3 Member=(Name=__empty_global_delete OverloadingParameters=[(Type=&quot;void *&quot;),(Type=&quot;unsigned int&quot;)]))" Category="CodeSchema_Method" Bounds="225.4,419.8,155.4,25.96" DelayedCrossGroupLinksState="Fetched" Label="__empty_global_delete" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @3 Member=(Name=__empty_global_delete OverloadingParameters=[(Type=&quot;void *&quot;)]))" Category="CodeSchema_Method" Bounds="40,419.8,155.4,25.96" DelayedCrossGroupLinksState="Fetched" Label="__empty_global_delete" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@10" Category="CodeSchema_Method" Bounds="159.46,343.84,117.836666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="__autoclassinit2" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@11" Category="CodeSchema_Method" Bounds="60,231.92,148.256666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="displayWheelAbilities" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@12" Category="CodeSchema_Method" Bounds="597.333333333333,231.92,135.59,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticConstantLeft" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@13" Category="CodeSchema_Method" Bounds="423.205,231.92,143.846666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticConstantRight" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@14" Category="CodeSchema_Method" Bounds="301.721666666667,231.92,90.8133333333333,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticSine" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@15" Category="CodeSchema_Method" Bounds="302.618333333333,175.96,89.02,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticTest" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@16" Category="CodeSchema_Method" Bounds="212.793333333333,175.96,52.67,25.96" DelayedCrossGroupLinksState="Fetched" Label="init" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@17" Category="CodeSchema_Method" Bounds="60,343.84,69.46,25.96" DelayedCrossGroupLinksState="Fetched" Label="Wheel" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@2" Category="CodeSchema_Assembly" Bounds="0,0,966.605,485.76" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="1" FilePath="$(9cdca1f0-e283-4743-8529-a754458b3168.OutputPath)" Group="Expanded" Label="SteeringWheel.exe" />
-    <Node Id="@4" Category="CodeSchema_Namespace" Bounds="20,40,926.605,425.76" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="4" Group="Expanded" Label="‎::" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@5" Category="CodeSchema_Method" Bounds="439.524166666667,80,87.5566666666666,25.96" DelayedCrossGroupLinksState="Fetched" Label="SDL_main" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@7" Category="CodeSchema_Class" Bounds="40,135.96,886.605,253.84" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="10" Group="Expanded" Label="Wheel" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" LayoutSettings="TopToBottom" UseManualLocation="True" />
-    <Node Id="@8" Category="CodeSchema_Method" Bounds="763.651666666667,231.92,142.953333333333,25.96" DelayedCrossGroupLinksState="Fetched" Label="uploadExecuteEffect" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@9" Category="CodeSchema_Method" Bounds="226.301666666667,287.88,89.6533333333333,25.96" DelayedCrossGroupLinksState="Fetched" Label="toConsole" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=(Name=__empty_global_delete OverloadingParameters=[(Type=&quot;void *&quot;),(Type=&quot;unsigned int&quot;)]))" Category="CodeSchema_Method" Bounds="-27.1766693115234,195.506559608164,155.4,25.96" DelayedCrossGroupLinksState="Fetched" Label="__empty_global_delete" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=(Name=__empty_global_delete OverloadingParameters=[(Type=&quot;void *&quot;)]))" Category="CodeSchema_Method" Bounds="-172.532223493788,19.5200504577637,155.4,25.96" DelayedCrossGroupLinksState="Fetched" Label="__empty_global_delete" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@10" Category="CodeSchema_Method" Bounds="340.641159839545,31.5466521683696,89.6533333333334,25.96" DelayedCrossGroupLinksState="Fetched" Label="toConsole" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@11" Category="CodeSchema_Method" Bounds="570.251159839545,-292.45334783163,117.836666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="__autoclassinit2" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@12" Category="CodeSchema_Method" Bounds="151.887826506212,75.5466521683696,148.256666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="displayWheelAbilities" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@13" Category="CodeSchema_Method" Bounds="158.221159839545,-292.45334783163,135.59,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticConstantLeft" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@14" Category="CodeSchema_Method" Bounds="154.092826506212,-124.45334783163,143.846666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticConstantRight" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@15" Category="CodeSchema_Method" Bounds="158.541159839546,-180.45334783163,134.95,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticSawToothUp" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@16" Category="CodeSchema_Method" Bounds="180.609493172879,-236.45334783163,90.8133333333333,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticSine" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@17" Category="CodeSchema_Method" Bounds="32.8678265062122,-68.4533478316304,89.02,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticTest" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@18" Category="CodeSchema_Method" Bounds="171.047826506212,-68.4533478316304,109.936666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticTriangle" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@19" Category="CodeSchema_Method" Bounds="51.0428265062121,119.54665216837,52.67,25.96" DelayedCrossGroupLinksState="Fetched" Label="init" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@2" Category="CodeSchema_Assembly" Bounds="-212.532223493788,-412.45334783163,960.62005,673.919907439795" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="1" FilePath="$(9cdca1f0-e283-4743-8529-a754458b3168.OutputPath)" Group="Expanded" Label="SteeringWheel.exe" UseManualLocation="True" />
+    <Node Id="@20" Category="CodeSchema_Method" Bounds="470.791159839545,-292.45334783163,69.46,25.96" DelayedCrossGroupLinksState="Fetched" Label="Wheel" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@4" Category="CodeSchema_Namespace" Bounds="-192.532223493788,-372.45334783163,920.62005,613.919907439795" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="4" Group="Expanded" Label="‎::" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@5" Category="CodeSchema_Method" Bounds="-104.688940160455,-96.4532584196001,87.5566666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="SDL_main" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@7" Category="CodeSchema_Class" Bounds="12.8678265062122,-332.45334783163,695.22,497.96" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="13" Group="Expanded" Label="Wheel" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@8" Category="CodeSchema_Method" Bounds="330.144493172879,-180.45334783163,110.646666666667,25.96" DelayedCrossGroupLinksState="Fetched" Label="hapticPeriodic" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@9" Category="CodeSchema_Method" Bounds="154.539493172879,-12.4533478316304,142.953333333333,25.96" DelayedCrossGroupLinksState="Fetched" Label="uploadExecuteEffect" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
   </Nodes>
   <Links>
-    <Link Source="@11" Target="@9" Category="CodeSchema_Calls" Bounds="165.905670166016,257.879974365234,65.1135711669922,26.5968017578125" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@15" Target="@12" Category="CodeSchema_Calls" Bounds="391.638336181641,196.772491455078,197.461212158203,34.7482757568359" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@15" Target="@13" Category="CodeSchema_Calls" Bounds="381.457122802734,201.919860839844,70.924072265625,26.8170166015625" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@15" Target="@14" Category="CodeSchema_Calls" Bounds="347.128326416016,201.919860839844,0,21.0000457763672" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@15" Target="@8" Category="CodeSchema_Calls" Bounds="391.638336181641,193.512405395508,363.313140869141,39.0912933349609" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@15" Target="@9" Category="CodeSchema_Calls" Bounds="271.128326416016,201.919860839844,58.3717041015625,76.9601440429688" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@16" Target="@11" Category="CodeSchema_Calls" Bounds="166.425659179688,201.808288574219,48.55712890625,25.8786926269531" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@16" Target="@9" Category="CodeSchema_Calls" Bounds="239.128326416016,201.919860839844,20.1098937988281,78.1473388671875" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@12" Target="@10" Category="CodeSchema_Calls" Bounds="273.054412841797,59.042293548584,59.8101501464844,16.5043601989746" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@15" Target="@8" Category="CodeSchema_Calls" Bounds="293.491149902344,-167.473342895508,27.6533508300781,0" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@16" Target="@8" Category="CodeSchema_Calls" Bounds="262.974792480469,-210.493347167969,77.0428771972656,27.0577392578125" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@10" Category="CodeSchema_Calls" Bounds="88.1016311645508,-42.4933471679688,243.539543151855,87.0200004577637" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@13" Category="CodeSchema_Calls" Bounds="83.5431442260742,-261.965698242188,112.286567687988,193.512351989746" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@14" Category="CodeSchema_Calls" Bounds="111.830070495605,-95.3202972412109,71.3117446899414,26.8669509887695" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@15" Category="CodeSchema_Calls" Bounds="89.0846557617188,-150.9052734375,98.8191680908203,82.4519271850586" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@16" Category="CodeSchema_Calls" Bounds="84.5472183227539,-206.669403076172,105.666786193848,138.21605682373" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@18" Category="CodeSchema_Calls" Bounds="121.887825012207,-55.4733467102051,40.1599960327148,0" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@9" Category="CodeSchema_Calls" Bounds="111.830070495605,-42.4933471679688,71.3117446899414,26.8669452667236" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@18" Target="@8" Category="CodeSchema_Calls" Bounds="253.486557006836,-148.420455932617,111.141952514648,79.9671096801758" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@19" Target="@10" Category="CodeSchema_Calls" Bounds="103.712829589844,63.2512512207031,259.172515869141,69.2754058837891" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@19" Target="@12" Category="CodeSchema_Calls" Bounds="103.712829589844,104.061256408691,69.8251953125,20.6696929931641" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
     <Link Source="@2" Target="@4" Category="Contains" FetchingParent="@2" />
     <Link Source="@4" Target="(@1 @3 Member=(Name=__empty_global_delete OverloadingParameters=[(Type=&quot;void *&quot;),(Type=&quot;unsigned int&quot;)]))" Category="Contains" FetchingParent="@4" />
     <Link Source="@4" Target="(@1 @3 Member=(Name=__empty_global_delete OverloadingParameters=[(Type=&quot;void *&quot;)]))" Category="Contains" FetchingParent="@4" />
     <Link Source="@4" Target="@5" Category="Contains" FetchingParent="@4" />
     <Link Source="@4" Target="@7" Category="Contains" FetchingParent="@4" />
-    <Link Source="@5" Target="@10" Category="CodeSchema_Calls" Bounds="237.788635957843,105.95962857149,232.480551554752,231.529594805362" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@5" Target="@15" Category="CodeSchema_Calls" Bounds="372.90466529402,105.95962857149,91.9783490680969,64.8160863107105" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@5" Target="@16" Category="CodeSchema_Calls" Bounds="273.817885904668,105.95962857149,176.456539087846,69.3472410015154" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@5" Target="@17" Category="CodeSchema_Calls" Bounds="121.292175531829,105.95962857149,342.893951099334,232.824678582858" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@5" Target="@11" Category="CodeSchema_Calls" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@5" Target="@17" Category="CodeSchema_Calls" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@5" Target="@19" Category="CodeSchema_Calls" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@5" Target="@20" Category="CodeSchema_Calls" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
     <Link Source="@7" Target="@10" Category="Contains" FetchingParent="@7" />
     <Link Source="@7" Target="@11" Category="Contains" FetchingParent="@7" />
     <Link Source="@7" Target="@12" Category="Contains" FetchingParent="@7" />
@@ -44,9 +52,12 @@
     <Link Source="@7" Target="@15" Category="Contains" FetchingParent="@7" />
     <Link Source="@7" Target="@16" Category="Contains" FetchingParent="@7" />
     <Link Source="@7" Target="@17" Category="Contains" FetchingParent="@7" />
+    <Link Source="@7" Target="@18" Category="Contains" FetchingParent="@7" />
+    <Link Source="@7" Target="@19" Category="Contains" FetchingParent="@7" />
+    <Link Source="@7" Target="@20" Category="Contains" FetchingParent="@7" />
     <Link Source="@7" Target="@8" Category="Contains" FetchingParent="@7" />
     <Link Source="@7" Target="@9" Category="Contains" FetchingParent="@7" />
-    <Link Source="@8" Target="@9" Category="CodeSchema_Calls" Bounds="324.924560546875,256.818328857422,439.437377929688,39.6065673828125" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@9" Target="@10" Category="CodeSchema_Calls" Bounds="273.054412841797,13.5066518783569,59.8101501464844,16.5043592453003" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
   </Links>
   <Categories>
     <Category Id="CodeSchema_Assembly" Label="Assembly" BasedOn="File" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Assembly" NavigationActionLabel="Assemblies" />
@@ -80,7 +91,6 @@
     <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
     <Property Id="Language" Label="Language" Description="Language" DataType="System.String" />
     <Property Id="Layout" DataType="System.String" />
-    <Property Id="LayoutSettings" DataType="Microsoft.VisualStudio.Diagrams.View.GroupLayoutStyle" />
     <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
     <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
     <Property Id="TargetType" DataType="System.Type" />
@@ -107,16 +117,19 @@
     <Alias n="5" Id="(@1 @3 Member=SDL_main)" />
     <Alias n="6" Id="Type=Wheel" />
     <Alias n="7" Id="(@1 @3 @6)" />
-    <Alias n="8" Id="(@1 @3 @6 Member=(Name=uploadExecuteEffect OverloadingParameters=[(Type=&quot;SDL_HapticEffect &amp;&quot;)]))" />
-    <Alias n="9" Id="(@1 @3 @6 Member=(Name=toConsole OverloadingParameters=[(Type=&quot;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;&quot;)]))" />
-    <Alias n="10" Id="(@1 @3 @6 Member=(Name=__autoclassinit2 OverloadingParameters=[(Type=&quot;unsigned int&quot;)]))" />
-    <Alias n="11" Id="(@1 @3 @6 Member=displayWheelAbilities)" />
-    <Alias n="12" Id="(@1 @3 @6 Member=hapticConstantLeft)" />
-    <Alias n="13" Id="(@1 @3 @6 Member=hapticConstantRight)" />
-    <Alias n="14" Id="(@1 @3 @6 Member=hapticSine)" />
-    <Alias n="15" Id="(@1 @3 @6 Member=hapticTest)" />
-    <Alias n="16" Id="(@1 @3 @6 Member=init)" />
-    <Alias n="17" Id="(@1 @3 @6 Member=Wheel)" />
+    <Alias n="8" Id="(@1 @3 @6 Member=(Name=hapticPeriodic OverloadingParameters=[(Type=&quot;SDL_HapticEffect &amp;&quot;)]))" />
+    <Alias n="9" Id="(@1 @3 @6 Member=(Name=uploadExecuteEffect OverloadingParameters=[(Type=&quot;SDL_HapticEffect &amp;&quot;)]))" />
+    <Alias n="10" Id="(@1 @3 @6 Member=(Name=toConsole OverloadingParameters=[(Type=&quot;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;&quot;)]))" />
+    <Alias n="11" Id="(@1 @3 @6 Member=(Name=__autoclassinit2 OverloadingParameters=[(Type=&quot;unsigned int&quot;)]))" />
+    <Alias n="12" Id="(@1 @3 @6 Member=displayWheelAbilities)" />
+    <Alias n="13" Id="(@1 @3 @6 Member=hapticConstantLeft)" />
+    <Alias n="14" Id="(@1 @3 @6 Member=hapticConstantRight)" />
+    <Alias n="15" Id="(@1 @3 @6 Member=hapticSawToothUp)" />
+    <Alias n="16" Id="(@1 @3 @6 Member=hapticSine)" />
+    <Alias n="17" Id="(@1 @3 @6 Member=hapticTest)" />
+    <Alias n="18" Id="(@1 @3 @6 Member=hapticTriangle)" />
+    <Alias n="19" Id="(@1 @3 @6 Member=init)" />
+    <Alias n="20" Id="(@1 @3 @6 Member=Wheel)" />
   </IdentifierAliases>
   <Styles>
     <Style TargetType="Node" GroupLabel="Results" ValueLabel="True">

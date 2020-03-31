@@ -22,9 +22,12 @@ private:
 	void displayWheelAbilities();
 	void toConsole(std::string msg);
 	SDL_HapticEffect hapticSine();
+	SDL_HapticEffect hapticTriangle();
+	SDL_HapticEffect hapticSawToothUp();
 	SDL_HapticEffect hapticConstantRight();
 	SDL_HapticEffect hapticConstantLeft();
 	int uploadExecuteEffect(SDL_HapticEffect &effect);
+	void hapticPeriodic(SDL_HapticEffect& effect);
 
 public:
 	void init();

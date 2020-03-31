@@ -11,42 +11,92 @@ void Wheel::displayWheelAbilities()
 {
 	toConsole("Haptic Abilities\n");
 	toConsole("----------------\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_SINE))  toConsole("has sine effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_CONSTANT)) toConsole("has constant effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_LEFTRIGHT)) toConsole("has leftright effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_TRIANGLE)) toConsole("has triangle wave effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_SAWTOOTHUP)) toConsole("has saw tooth up effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_SAWTOOTHDOWN)) toConsole("has saw tooth down effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_RAMP)) toConsole("has ramp effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_SPRING)) toConsole("has spring effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_DAMPER)) toConsole("has damper effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_INERTIA)) toConsole("has inertia effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_FRICTION)) toConsole("has friction effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_CUSTOM)) toConsole("has custom effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_GAIN)) toConsole("has gain effect\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_AUTOCENTER)) toConsole("has auto centre effect\n ");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_PAUSE))  toConsole("can be paused\n");
-	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_STATUS))  toConsole("can have its status queried\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_SINE)  toConsole("has sine effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_CONSTANT) toConsole("has constant effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_LEFTRIGHT) toConsole("has leftright effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_TRIANGLE) toConsole("has triangle wave effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_SAWTOOTHUP) toConsole("has saw tooth up effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_SAWTOOTHDOWN) toConsole("has saw tooth down effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_RAMP) toConsole("has ramp effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_SPRING) toConsole("has spring effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_DAMPER) toConsole("has damper effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_INERTIA) toConsole("has inertia effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_FRICTION) toConsole("has friction effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_CUSTOM) toConsole("has custom effect\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_GAIN) toConsole("can set gain\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_AUTOCENTER) toConsole("has auto centre effect\n ");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_PAUSE)  toConsole("can be paused\n");
+	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_STATUS)  toConsole("can have its status queried\n");
+	if (SDL_HapticRumbleSupported(haptic) == SDL_TRUE) toConsole("support haptic rumble\n");
 }
 
 // See SDL_Haptic.h
+//   __      __      __      __
+//  /  \    /  \    /  \    /
+// /    \__/    \__/    \__/
+//
 SDL_HapticEffect Wheel::hapticSine()
 {
 	SDL_HapticEffect effect;
 	// Create the effect
 	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_SINE;
-	effect.periodic.direction.type = SDL_HAPTIC_CARTESIAN; 
-	effect.periodic.direction.dir[0] = 0; 
-	effect.periodic.direction.dir[0] = -1; // Force comes from south
-	effect.periodic.direction.dir[0] = 0; 
-	effect.periodic.period = 100; // 100 ms
-	effect.periodic.magnitude = 32000; // 32000 of 32767 strength
-	effect.periodic.length = 5000; // 5 seconds long
-	effect.periodic.attack_length = 50; // Takes 50ms to get max strength
-	effect.periodic.fade_length = 50; // Takes 50ms to fade away
+	hapticPeriodic(effect);
 
 	return effect;
+}
+
+// See SDL_Haptic.h
+//   /\    /\    /\    /\    /\
+//  /  \  /  \  /  \  /  \  /
+// /    \/    \/    \/    \/
+SDL_HapticEffect Wheel::hapticTriangle()
+{
+	SDL_HapticEffect effect;
+	// Create the effect
+	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
+	effect.type = SDL_HAPTIC_TRIANGLE;
+	hapticPeriodic(effect);
+
+	return effect;
+}
+
+// See SDL_Haptic.h
+//   /|  /|  /|  /|  /|  /|  /|
+//  / | / | / | / | / | / | / |
+// /  |/  |/  |/  |/  |/  |/  |
+SDL_HapticEffect Wheel::hapticSawToothUp()
+{
+	SDL_HapticEffect effect;
+	// Create the effect
+	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
+	effect.type = SDL_HAPTIC_TRIANGLE;
+	hapticPeriodic(effect);
+
+	return effect;
+}
+
+
+// Helper periodic function
+void Wheel::hapticPeriodic(SDL_HapticEffect &effect)
+{
+	effect.periodic.direction.type = SDL_HAPTIC_CARTESIAN;
+	effect.periodic.direction.dir[0] = 0;
+	effect.periodic.direction.dir[0] = -1; // Force comes from south
+	effect.periodic.direction.dir[0] = 0;
+
+	effect.periodic.length = 5000; // 5 seconds long
+	effect.periodic.delay = 0;
+
+	effect.periodic.period = 100; // 100 ms
+	effect.periodic.magnitude = 32000; // 32000 of 32767 strength
+	effect.periodic.offset = 0;
+	effect.periodic.phase = 0;
+
+	effect.periodic.attack_length = 50; // Takes 50ms to get max strength
+	effect.periodic.attack_level = 0;
+	effect.periodic.fade_length = 50; // Takes 50ms to fade away
+	effect.periodic.fade_level = 0;
 }
 
 // See SDL_Haptic.h
@@ -168,6 +218,20 @@ void Wheel::hapticTest()
 	effect_id = uploadExecuteEffect(effect);
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
+
+	// test 4
+	effect = hapticTriangle();
+	toConsole("Trying Haptic Triangle...\n");
+	effect_id = uploadExecuteEffect(effect);
+	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	SDL_Delay(5000);
+
+	// test 5
+	effect = hapticSawToothUp();
+	toConsole("Trying Haptic Sawtooth Up...\n");
+	effect_id = uploadExecuteEffect(effect);
+	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	SDL_Delay(5000);
 	
 	// Destroy this effect
 	SDL_HapticDestroyEffect(haptic, effect_id);
@@ -211,10 +275,11 @@ void Wheel::init()
 					// Display info 
 					std::string name = SDL_JoystickName(wheel);
 					std::string num = std::to_string(SDL_JoystickNumAxes(wheel));
-					toConsole("Found <" + name + "> with " + num + " axis [" + std::to_string(i) + "]\n");
+					haptic = SDL_HapticOpen(i);
+					int nEffects = SDL_HapticNumEffects(haptic);
+					toConsole("Found <" + name + "> with axis [" + num + "]  Device# [" + std::to_string(i) + "] effects [" + std::to_string(nEffects) + "]\n");
 
 					// Haptic wheel?
-					haptic = SDL_HapticOpen(i);
 					if (haptic == NULL)
 					{
 						deviceIndex[devicePointer] = NON_HAPTIC;
@@ -222,14 +287,16 @@ void Wheel::init()
 					}
 					else
 					{
-						// Try Auto centre (G27 doesn't have auto centre - relies on Logitech driver
 						deviceIndex[devicePointer] = HAPTIC;
+						toConsole("has haptic ability\n");
+
+						// Try Auto centre (G27 doesn't have auto centre - relies on Logitech driver)
 						if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_AUTOCENTER))
 						{
 							if (SDL_HapticSetAutocenter(haptic, 50) == 0)
 							{
-								toConsole("wheel was centred with 50\n");
-							 }
+								toConsole("wheel was centred with force 50\n");
+							}
 							else
 							{
 								toConsole("Error: wheel centreing failed\n");
@@ -251,7 +318,7 @@ void Wheel::init()
 
 			} // each wheel
 
-		} // we have wheels
+		} // end we have wheels
 
 	} // end SDL init tests
 
