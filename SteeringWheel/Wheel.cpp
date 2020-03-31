@@ -1,10 +1,12 @@
 #include "Wheel.h"
 
+// Simply display on console
 void Wheel::toConsole(std::string msg)
 {
 	std::cout << "Wheel: " << msg;
 }
 
+// For diagnostic purposes
 void Wheel::displayWheelAbilities()
 {
 	toConsole("Haptic Abilities\n");
@@ -27,35 +29,37 @@ void Wheel::displayWheelAbilities()
 	if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_STATUS))  toConsole("can have its status queried\n");
 }
 
+// See SDL_Haptic.h
 SDL_HapticEffect Wheel::hapticSine()
 {
 	SDL_HapticEffect effect;
 	// Create the effect
 	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_SINE;
-	effect.periodic.direction.type = SDL_HAPTIC_CARTESIAN; // Polar coordinates
-	effect.periodic.direction.dir[0] = 0; // Force comes from south
+	effect.periodic.direction.type = SDL_HAPTIC_CARTESIAN; 
+	effect.periodic.direction.dir[0] = 0; 
 	effect.periodic.direction.dir[0] = -1; // Force comes from south
-	effect.periodic.direction.dir[0] = 0; // Force comes from south
-	effect.periodic.period = 100; // 1000 ms
-	effect.periodic.magnitude = 32000; // 20000/32767 strength
+	effect.periodic.direction.dir[0] = 0; 
+	effect.periodic.period = 100; // 100 ms
+	effect.periodic.magnitude = 32000; // 32000 of 32767 strength
 	effect.periodic.length = 5000; // 5 seconds long
-	effect.periodic.attack_length = 50; // Takes 1 second to get max strength
-	effect.periodic.fade_length = 50; // Takes 1 second to fade away
+	effect.periodic.attack_length = 50; // Takes 50ms to get max strength
+	effect.periodic.fade_length = 50; // Takes 50ms to fade away
 
 	return effect;
 }
 
+// See SDL_Haptic.h
 SDL_HapticEffect Wheel::hapticConstantRight()
 {
 	SDL_HapticEffect effect;
 	// Create the effect
 	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_CONSTANT;
-	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN; // Polar coordinates
-	effect.constant.direction.dir[0] = -1; // Force comes from south
-	effect.constant.direction.dir[1] = 0; // Force comes from south
-	effect.constant.direction.dir[2] = 0; // Force comes from south
+	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN; 
+	effect.constant.direction.dir[0] = -1; // Force comes from west
+	effect.constant.direction.dir[1] = 0; 
+	effect.constant.direction.dir[2] = 0; 
 	effect.constant.length = 3000;
 	effect.constant.delay = 0;
 	effect.constant.level = 20000;
@@ -68,16 +72,17 @@ SDL_HapticEffect Wheel::hapticConstantRight()
 	return effect;
 }
 
+// See SDL_Haptic.h
 SDL_HapticEffect Wheel::hapticConstantLeft()
 {
 	SDL_HapticEffect effect;
 	// Create the effect
 	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_CONSTANT;
-	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN; // Polar coordinates
-	effect.constant.direction.dir[0] = 1; // Force comes from south
-	effect.constant.direction.dir[1] = 0; // Force comes from south
-	effect.constant.direction.dir[2] = 0; // Force comes from south
+	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN; 
+	effect.constant.direction.dir[0] = 1; // Force comes from east
+	effect.constant.direction.dir[1] = 0;
+	effect.constant.direction.dir[2] = 0; 
 	effect.constant.length = 3000;
 	effect.constant.delay = 0;
 	effect.constant.level = 20000;
@@ -90,34 +95,44 @@ SDL_HapticEffect Wheel::hapticConstantLeft()
 	return effect;
 }
 
+// Helper function to send effect to wheel controller
 int Wheel::uploadExecuteEffect(SDL_HapticEffect& effect)
 {
 
 	// Upload the effect
 	int effect_id = SDL_HapticNewEffect(haptic, &effect);
 
-	if (effect_id < 0)
-	{
-		std::string msg = SDL_GetError();
-		toConsole("Error: " + msg + "\n");
-	}
-	// Test the effect
-	effect_id = SDL_HapticRunEffect(haptic, effect_id, 1);
+	// error?
 	if (effect_id < 0)
 	{
 		std::string msg = SDL_GetError();
 		toConsole("Error: " + msg + "\n");
 	}
 
+	// Test the effect
+	effect_id = SDL_HapticRunEffect(haptic, effect_id, 1);
+	
+	// Error?
+	if (effect_id < 0)
+	{
+		std::string msg = SDL_GetError();
+		toConsole("Error: " + msg + "\n");
+	}
+
+	// Return it (negative is failure)
 	return effect_id;
 }
 
+// For testing purposes only
 void Wheel::hapticTest()
 {
+
+	// Much of this will be changed it is an example of use
 
 	SDL_HapticEffect effect;
 	int effect_id;
 	
+	// TODO force first device to be used
 	wheel = SDL_JoystickOpen(0);
 	haptic = SDL_HapticOpenFromJoystick(wheel);
 
@@ -154,13 +169,14 @@ void Wheel::hapticTest()
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
 	
-	// We destroy the effect, although closing the device also does this
+	// Destroy this effect
 	SDL_HapticDestroyEffect(haptic, effect_id);
 	
 	// Close the device
 	SDL_HapticClose(haptic);
 }
 
+// Init SDL and find joysticks / wheels with the right abilities
 void Wheel::init()
 {
 	//Initialize SDL
@@ -206,7 +222,7 @@ void Wheel::init()
 					}
 					else
 					{
-						// Try Auto centre
+						// Try Auto centre (G27 doesn't have auto centre - relies on Logitech driver
 						deviceIndex[devicePointer] = HAPTIC;
 						if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_AUTOCENTER))
 						{
