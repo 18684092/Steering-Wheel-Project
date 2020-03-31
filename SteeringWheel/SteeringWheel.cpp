@@ -5,21 +5,6 @@
 #include "Wheel.h"
 
 
-//Frees media and shuts down SDL
-void close();
-
-//Game Controller 1 handler
-SDL_Joystick* wheel = NULL;
-
-void close()
-{
-	//Close game controller
-	SDL_JoystickClose(wheel);
-	wheel = NULL;
-
-	//Quit SDL subsystems
-	SDL_Quit();
-}
 
 int main(int argc, char* args[])
 {
@@ -68,8 +53,6 @@ int main(int argc, char* args[])
 	//	SDL_Delay(30);
 	//}
 
-	//Free resources and close SDL
-	close();
 
 	return 0;
 }
