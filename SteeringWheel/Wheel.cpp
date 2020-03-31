@@ -160,7 +160,7 @@ void Wheel::hapticTest()
 	toConsole("Trying Constant Force Left...\n");
 	effect_id = uploadExecuteEffect(effect);
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
-	SDL_Delay(5000);
+	SDL_Delay(5000); // COMMENT THIS out to see 2 effects working simultaneously
 
 	// test 3
 	effect = hapticSine();
