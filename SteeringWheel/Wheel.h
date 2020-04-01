@@ -21,14 +21,15 @@ private:
 	bool error;
 	void displayWheelAbilities();
 	void toConsole(std::string msg);
-	SDL_HapticEffect hapticSine();
-	SDL_HapticEffect hapticTriangle();
-	SDL_HapticEffect hapticSawToothUp();
-	SDL_HapticEffect hapticConstantRight();
-	SDL_HapticEffect hapticConstantLeft();
-	void hapticSetDirectionC(SDL_HapticEffect& effect, char d);
-	int uploadExecuteEffect(SDL_HapticEffect &effect);
-	void hapticPeriodic(SDL_HapticEffect& effect);
+	void hapticSine();
+	void hapticTriangle();
+	void hapticSawToothUp();
+	void hapticConstantRight();
+	void hapticConstantLeft();
+	void initEffect();
+	void hapticSetDirectionC(char d);
+	int uploadExecuteEffect();
+	SDL_HapticEffect effect;
 
 public:
 	void init();

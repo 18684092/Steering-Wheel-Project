@@ -35,57 +35,55 @@ void Wheel::displayWheelAbilities()
 //  /  \    /  \    /  \    /
 // /    \__/    \__/    \__/
 //
-SDL_HapticEffect Wheel::hapticSine()
+void Wheel::hapticSine()
 {
-	SDL_HapticEffect effect;
-	// Create the effect
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_SINE;
-	hapticPeriodic(effect);
-
-	return effect;
+	// TODO why do we need to reset these?
+	effect.periodic.period = 100; // 100 ms
+	effect.periodic.magnitude = 32000; // 32000 of 32767 strength
+	effect.periodic.offset = 0;
+	effect.periodic.phase = 0;
 }
 
 // See SDL_Haptic.h
 //   /\    /\    /\    /\    /\
 //  /  \  /  \  /  \  /  \  /
 // /    \/    \/    \/    \/
-SDL_HapticEffect Wheel::hapticTriangle()
+void Wheel::hapticTriangle()
 {
-	SDL_HapticEffect effect;
-	// Create the effect
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_TRIANGLE;
-	hapticPeriodic(effect);
-
-	return effect;
+	// TODO why do we need to reset these?
+	effect.periodic.period = 100; // 100 ms
+	effect.periodic.magnitude = 32000; // 32000 of 32767 strength
+	effect.periodic.offset = 0;
+	effect.periodic.phase = 0;
 }
 
 // See SDL_Haptic.h
 //   /|  /|  /|  /|  /|  /|  /|
 //  / | / | / | / | / | / | / |
 // /  |/  |/  |/  |/  |/  |/  |
-SDL_HapticEffect Wheel::hapticSawToothUp()
+void Wheel::hapticSawToothUp()
 {
-	SDL_HapticEffect effect;
-	// Create the effect
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
-	effect.type = SDL_HAPTIC_TRIANGLE;
-	hapticPeriodic(effect);
-
-	return effect;
+	effect.type = SDL_HAPTIC_SAWTOOTHUP;
+	// TODO why do we need to reset these?
+	effect.periodic.period = 100; // 100 ms
+	effect.periodic.magnitude = 32000; // 32000 of 32767 strength
+	effect.periodic.offset = 0;
+	effect.periodic.phase = 0;
 }
 
-
-// Helper periodic function
-void Wheel::hapticPeriodic(SDL_HapticEffect &effect)
+void Wheel::initEffect()
 {
+	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
+
+	// SDL_HAPTIC_TRIANGLE SDL_HAPTIC_SINE SDL_HAPTIC_SAWTOOTHUP
 	effect.periodic.direction.type = SDL_HAPTIC_CARTESIAN;
 	effect.periodic.direction.dir[0] = 0;
-	effect.periodic.direction.dir[0] = -1; // Force comes from south
-	effect.periodic.direction.dir[0] = 0;
+	effect.periodic.direction.dir[1] = -1; // Force comes from south
+	effect.periodic.direction.dir[2] = 0;
 
-	effect.periodic.length = 5000; // 5 seconds long
+	effect.periodic.length = 3000; // 5 seconds long
 	effect.periodic.delay = 0;
 
 	effect.periodic.period = 100; // 100 ms
@@ -94,19 +92,11 @@ void Wheel::hapticPeriodic(SDL_HapticEffect &effect)
 	effect.periodic.phase = 0;
 
 	effect.periodic.attack_length = 50; // Takes 50ms to get max strength
-	effect.periodic.attack_level = 0;
+	effect.periodic.attack_level = 32000;
 	effect.periodic.fade_length = 50; // Takes 50ms to fade away
 	effect.periodic.fade_level = 0;
-}
 
-// See SDL_Haptic.h
-SDL_HapticEffect Wheel::hapticConstantRight()
-{
-	SDL_HapticEffect effect;
-	// Create the effect
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
-	effect.type = SDL_HAPTIC_CONSTANT;
-	hapticSetDirectionC(effect, 'W');
+	// SDL_HAPTIC_CONSTANT;
 	effect.constant.length = 3000;
 	effect.constant.delay = 0;
 	effect.constant.level = 20000;
@@ -114,62 +104,49 @@ SDL_HapticEffect Wheel::hapticConstantRight()
 	effect.constant.attack_level = 5000;
 	effect.constant.fade_length = 0;
 	effect.constant.fade_level = 0;
-	//effect.constant.type = SDL_HAPTIC_CONSTANT;
+}
 
-	return effect;
+
+// See SDL_Haptic.h
+void Wheel::hapticConstantRight()
+{
+	effect.type = SDL_HAPTIC_CONSTANT;
+	hapticSetDirectionC('W');
 }
 
 // See SDL_Haptic.h
-SDL_HapticEffect Wheel::hapticConstantLeft()
+void Wheel::hapticConstantLeft()
 {
-	SDL_HapticEffect effect;
-	// Create the effect
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 	effect.type = SDL_HAPTIC_CONSTANT;
-	hapticSetDirectionC(effect, 'E');
-	effect.constant.length = 3000;
-	effect.constant.delay = 0;
-	effect.constant.level = 20000;
-	effect.constant.attack_length = 400;
-	effect.constant.attack_level = 5000;
-	effect.constant.fade_length = 0;
-	effect.constant.fade_level = 0;
-	//effect.constant.type = SDL_HAPTIC_CONSTANT;
-
-	return effect;
+	hapticSetDirectionC('E');
 }
 
 // Set Direction for CONSTANT effect
-void Wheel::hapticSetDirectionC(SDL_HapticEffect& effect, char d)
+void Wheel::hapticSetDirectionC(char d)
 {
 	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
+	effect.constant.direction.dir[0] = 0;
+	effect.constant.direction.dir[1] = 0;
+	effect.constant.direction.dir[2] = 0;
 	switch (d)
 	{
 	case 'E':
 		effect.constant.direction.dir[0] = 1; 
-		effect.constant.direction.dir[1] = 0;
-		effect.constant.direction.dir[2] = 0;
 		break;
 	case 'W':
 		effect.constant.direction.dir[0] = -1; 
-		effect.constant.direction.dir[1] = 0;
-		effect.constant.direction.dir[2] = 0;
 		break;
 	case 'N':
-		effect.constant.direction.dir[0] = 0; 
 		effect.constant.direction.dir[1] = -1;
-		effect.constant.direction.dir[2] = 0;
 		break;
 	case 'S':
 	default:
-		effect.constant.direction.dir[0] = 0; 
 		effect.constant.direction.dir[1] = 1;
-		effect.constant.direction.dir[2] = 0;
 	}
 }
 
 // Helper function to send effect to wheel controller
-int Wheel::uploadExecuteEffect(SDL_HapticEffect& effect)
+int Wheel::uploadExecuteEffect()
 {
 
 	// Upload the effect
@@ -200,9 +177,6 @@ int Wheel::uploadExecuteEffect(SDL_HapticEffect& effect)
 void Wheel::hapticTest()
 {
 
-	// Much of this will be changed it is an example of use
-
-	SDL_HapticEffect effect;
 	int effect_id;
 	
 	// TODO force first device to be used
@@ -218,43 +192,41 @@ void Wheel::hapticTest()
 		return ;
 	}
 	
-	// Create the effect
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 
 	// test 1
-	effect = hapticConstantRight();
+	hapticConstantRight();
 	toConsole("Trying Constant Force Right...\n");
-	effect_id = uploadExecuteEffect(effect);
+	effect_id = uploadExecuteEffect();
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
 
 	// test 2
-	effect = hapticConstantLeft();
+	hapticConstantLeft();
 	toConsole("Trying Constant Force Left...\n");
-	effect_id = uploadExecuteEffect(effect);
+	effect_id = uploadExecuteEffect();
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000); // COMMENT THIS out to see 2 effects working simultaneously
 
 	// test 3
-	effect = hapticSine();
+	hapticSine();
 	toConsole("Trying Haptic Sine...\n");
-	effect_id = uploadExecuteEffect(effect);
+	effect_id = uploadExecuteEffect();
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
 
-	//// test 4
-	//effect = hapticTriangle();
-	//toConsole("Trying Haptic Triangle...\n");
-	//effect_id = uploadExecuteEffect(effect);
-	//if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
-	//SDL_Delay(5000);
+	// test 4
+	hapticTriangle();
+	toConsole("Trying Haptic Triangle...\n");
+	effect_id = uploadExecuteEffect();
+	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	SDL_Delay(5000);
 
-	//// test 5
-	//effect = hapticSawToothUp();
-	//toConsole("Trying Haptic Sawtooth Up...\n");
-	//effect_id = uploadExecuteEffect(effect);
-	//if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
-	//SDL_Delay(5000);
+	// test 5
+	hapticSawToothUp();
+	toConsole("Trying Haptic Sawtooth Up...\n");
+	effect_id = uploadExecuteEffect();
+	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	SDL_Delay(5000);
 	
 	// Destroy this effect
 	SDL_HapticDestroyEffect(haptic, effect_id);
@@ -344,5 +316,7 @@ void Wheel::init()
 		} // end we have wheels
 
 	} // end SDL init tests
+
+	initEffect();
 
 } // end init
