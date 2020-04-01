@@ -1,6 +1,2 @@
-﻿  SteeringWheel.cpp
-  Wheel.cpp
-  Compiling...
-  Generating Code...
+﻿  Wheel.cpp
   SteeringWheel.vcxproj -> C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Debug\SteeringWheel.exe
-C:\Users\Andy\Downloads\SDL2-2.0.12\include\SDL_rect.h(102): warning C26812: The enum type 'SDL_bool' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).

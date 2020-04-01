@@ -27,7 +27,7 @@ void Wheel::displayWheelAbilities()
 	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_AUTOCENTER) toConsole("has auto centre effect\n ");
 	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_PAUSE)  toConsole("can be paused\n");
 	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_STATUS)  toConsole("can have its status queried\n");
-	if (SDL_HapticRumbleInit(haptic) == 0) toConsole("support haptic rumble\n");
+	if (SDL_HapticRumbleSupported(haptic)) toConsole("support haptic rumble\n");
 }
 
 // See SDL_Haptic.h
@@ -73,6 +73,19 @@ void Wheel::hapticSawToothUp()
 	effect.periodic.phase = 0;
 }
 
+void Wheel::spring()
+{
+	effect.type = SDL_HAPTIC_SPRING;
+	effect.condition.length = 5000;
+	effect.condition.right_sat[0] = 0xFFFF;
+	effect.condition.left_sat[0] = 0xFFFF;
+	effect.condition.right_coeff[0] = 0x2000;
+	effect.condition.left_coeff[0] = 0x2000;
+	effect.condition.deadband[0] = 0x100;
+	effect.condition.center[0] = 0x1000;     /* Displace the center for it to move. */
+}
+
+// Set default initial effect
 void Wheel::initEffect()
 {
 	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
@@ -99,9 +112,9 @@ void Wheel::initEffect()
 	// SDL_HAPTIC_CONSTANT;
 	effect.constant.length = 3000;
 	effect.constant.delay = 0;
-	effect.constant.level = 20000;
+	effect.constant.level = 32000;
 	effect.constant.attack_length = 500;
-	effect.constant.attack_level = 5000;
+	effect.constant.attack_level = 32000;
 	effect.constant.fade_length = 0;
 	effect.constant.fade_level = 0;
 }
@@ -127,7 +140,7 @@ void Wheel::hapticSetDirectionC(char d)
 	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
 	effect.constant.direction.dir[0] = 0;
 	effect.constant.direction.dir[1] = 0;
-	effect.constant.direction.dir[2] = 0;
+	effect.constant.direction.dir[2] = 0; // not used - included for completeness
 	switch (d)
 	{
 	case 'E':
@@ -193,6 +206,15 @@ void Wheel::hapticTest()
 	}
 	
 
+	//// test 0
+	//spring();
+	//toConsole("Trying Haptic Spring...\n");
+	//effect_id = uploadExecuteEffect();
+	//if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	//SDL_Delay(5000);
+
+	SDL_HapticSetGain(haptic, 100);
+
 	// test 1
 	hapticConstantRight();
 	toConsole("Trying Constant Force Right...\n");
@@ -220,6 +242,8 @@ void Wheel::hapticTest()
 	effect_id = uploadExecuteEffect();
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
+
+
 
 	// test 5
 	hapticSawToothUp();

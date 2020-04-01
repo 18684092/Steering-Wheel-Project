@@ -26,6 +26,7 @@ private:
 	void hapticSawToothUp();
 	void hapticConstantRight();
 	void hapticConstantLeft();
+	void spring();
 	void initEffect();
 	void hapticSetDirectionC(char d);
 	int uploadExecuteEffect();
