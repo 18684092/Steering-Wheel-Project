@@ -26,6 +26,7 @@ private:
 	SDL_HapticEffect hapticSawToothUp();
 	SDL_HapticEffect hapticConstantRight();
 	SDL_HapticEffect hapticConstantLeft();
+	void hapticSetDirectionC(SDL_HapticEffect& effect, char d);
 	int uploadExecuteEffect(SDL_HapticEffect &effect);
 	void hapticPeriodic(SDL_HapticEffect& effect);
 
