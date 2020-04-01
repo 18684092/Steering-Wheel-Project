@@ -27,7 +27,7 @@ void Wheel::displayWheelAbilities()
 	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_AUTOCENTER) toConsole("has auto centre effect\n ");
 	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_PAUSE)  toConsole("can be paused\n");
 	if (SDL_HapticQuery(haptic) & SDL_HAPTIC_STATUS)  toConsole("can have its status queried\n");
-	if (SDL_HapticRumbleSupported(haptic) == SDL_TRUE) toConsole("support haptic rumble\n");
+	if (SDL_HapticRumbleInit(haptic) == 0) toConsole("support haptic rumble\n");
 }
 
 // See SDL_Haptic.h
@@ -227,6 +227,15 @@ void Wheel::hapticTest()
 	effect_id = uploadExecuteEffect();
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
+
+	// test 6
+	// Initialize simple rumble
+	toConsole("Trying Haptic Rumble...\n");
+	effect_id = SDL_HapticRumbleInit(haptic);	
+	// Play effect at 50% strength for 2 seconds
+	if (effect_id == 0) SDL_HapticRumblePlay(haptic, 0.5, 2000);
+	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	SDL_Delay(2000);
 	
 	// Destroy this effect
 	SDL_HapticDestroyEffect(haptic, effect_id);
