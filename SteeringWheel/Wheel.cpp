@@ -1,9 +1,26 @@
 #include "Wheel.h"
 
+
 // Simply display on console
 void Wheel::toConsole(std::string msg)
 {
 	std::cout << "Wheel: " << msg;
+}
+
+Wheel::Wheel()
+{
+	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
+}
+
+int Wheel::readWheelPosition()
+{
+	int pos = SDL_JoystickGetAxis(wheel, 0);
+	return pos;
+}
+
+int Wheel::getNumberOfButtons()
+{
+	return SDL_JoystickNumButtons(wheel);
 }
 
 // For diagnostic purposes
@@ -88,7 +105,7 @@ void Wheel::spring()
 // Set default initial effect
 void Wheel::initEffect()
 {
-	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
+	
 
 	// SDL_HAPTIC_TRIANGLE SDL_HAPTIC_SINE SDL_HAPTIC_SAWTOOTHUP
 	effect.periodic.direction.type = SDL_HAPTIC_CARTESIAN;
@@ -109,54 +126,124 @@ void Wheel::initEffect()
 	effect.periodic.fade_length = 50; // Takes 50ms to fade away
 	effect.periodic.fade_level = 0;
 
-	// SDL_HAPTIC_CONSTANT;
-	effect.constant.length = 3000;
-	effect.constant.delay = 0;
-	effect.constant.level = 32000;
-	effect.constant.attack_length = 500;
-	effect.constant.attack_level = 32000;
-	effect.constant.fade_length = 0;
-	effect.constant.fade_level = 0;
+	//// SDL_HAPTIC_CONSTANT;
+	//effect.constant.length = 10;
+	//effect.constant.delay = 0;
+	//effect.constant.level = 10000;
+	//effect.constant.attack_length = 0;
+	//effect.constant.attack_level = 0;
+	//effect.constant.fade_length = 0;
+	//effect.constant.fade_level = 0;
 }
 
 
-// See SDL_Haptic.h
-void Wheel::hapticConstantRight()
+void Wheel::centre()
 {
-	effect.type = SDL_HAPTIC_CONSTANT;
-	hapticSetDirectionC('W');
-}
 
-// See SDL_Haptic.h
-void Wheel::hapticConstantLeft()
-{
-	effect.type = SDL_HAPTIC_CONSTANT;
-	hapticSetDirectionC('E');
-}
+	Uint32 duration = 10;
 
-// Set Direction for CONSTANT effect
-void Wheel::hapticSetDirectionC(char d)
-{
-	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
-	effect.constant.direction.dir[0] = 0;
-	effect.constant.direction.dir[1] = 0;
-	effect.constant.direction.dir[2] = 0; // not used - included for completeness
-	switch (d)
-	{
-	case 'E':
-		effect.constant.direction.dir[0] = 1; 
-		break;
-	case 'W':
-		effect.constant.direction.dir[0] = -1; 
-		break;
-	case 'N':
-		effect.constant.direction.dir[1] = -1;
-		break;
-	case 'S':
-	default:
-		effect.constant.direction.dir[1] = 1;
+	int effect_left = setConstantForce(duration, 10000, HE::LEFT);
+	int effect_right = setConstantForce(duration, 10000, HE::RIGHT);
+
+	//std::cout << "L: " << effect_left << " R: " << effect_right << std::endl;
+	std::cout << "Centering...";
+
+	// Force update as there is no event
+	SDL_JoystickUpdate();
+	int pos = readWheelPosition();
+
+	// Find the centre as best we can
+	while ( pos > 20 || pos < -20 )
+	{		
+		SDL_JoystickUpdate();
+		pos = readWheelPosition();
+		if (pos > 0)
+		{
+			runEffect(HE::CONSTANT_LEFT, 1);
+
+			if (pos > 500) SDL_Delay(duration - 2); else
+			{
+				while (SDL_HapticGetEffectStatus(haptic, effect_left)) SDL_Delay(1);
+				int last = 1;
+				int current = 0;
+				while (last != current)
+				{
+					//SDL_JoystickUpdate();
+					current = readWheelPosition();
+					SDL_Delay(duration + 2);
+					//SDL_JoystickUpdate();
+					last = readWheelPosition();
+				}
+			}
+		}
+		else if (pos < 0)
+		{
+			
+			runEffect(HE::CONSTANT_RIGHT, 1);
+
+			if (pos < -500) SDL_Delay(duration - 2); else 
+			{
+				while (SDL_HapticGetEffectStatus(haptic, effect_left)) SDL_Delay(1);
+				int last = 1;
+				int current = 0;
+				while (last != current)
+				{
+					//SDL_JoystickUpdate();
+					current = readWheelPosition();
+					SDL_Delay(duration + 2);
+					//SDL_JoystickUpdate();
+					last = readWheelPosition();
+				}
+			}
+		}
+
+		if (pos < 500 && pos > -500 ) SDL_Delay(100);
 	}
+
+	// Let it settle
+	SDL_Delay(1000);
+	SDL_JoystickUpdate();
+	std::cout << "done (pos=" << readWheelPosition() << ")" << std::endl;
 }
+
+//// See SDL_Haptic.h
+//void Wheel::hapticConstantRight()
+//{
+//	effect.type = SDL_HAPTIC_CONSTANT;
+//	hapticSetDirectionC('W');
+//}
+//
+//
+//// See SDL_Haptic.h
+//void Wheel::hapticConstantLeft()
+//{
+//	effect.type = SDL_HAPTIC_CONSTANT;
+//	hapticSetDirectionC('E');
+//}
+//
+//// Set Direction for CONSTANT effect
+//void Wheel::hapticSetDirectionC(char d)
+//{
+//	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
+//	effect.constant.direction.dir[0] = 0;
+//	effect.constant.direction.dir[1] = 0;
+//	effect.constant.direction.dir[2] = 0; // not used - included for completeness
+//	switch (d)
+//	{
+//	case 'E':
+//		effect.constant.direction.dir[0] = 1; 
+//		break;
+//	case 'W':
+//		effect.constant.direction.dir[0] = -1; 
+//		break;
+//	case 'N':
+//		effect.constant.direction.dir[1] = -1;
+//		break;
+//	case 'S':
+//	default:
+//		effect.constant.direction.dir[1] = 1;
+//	}
+//}
 
 // Helper function to send effect to wheel controller
 int Wheel::uploadExecuteEffect()
@@ -207,27 +294,27 @@ void Wheel::hapticTest()
 	
 
 	//// test 0
-	//spring();
-	//toConsole("Trying Haptic Spring...\n");
-	//effect_id = uploadExecuteEffect();
-	//if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
-	//SDL_Delay(5000);
-
-	SDL_HapticSetGain(haptic, 100);
-
-	// test 1
-	hapticConstantRight();
-	toConsole("Trying Constant Force Right...\n");
+	spring();
+	toConsole("Trying Haptic Spring...\n");
 	effect_id = uploadExecuteEffect();
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
 	SDL_Delay(5000);
 
-	// test 2
-	hapticConstantLeft();
-	toConsole("Trying Constant Force Left...\n");
-	effect_id = uploadExecuteEffect();
+	SDL_HapticSetGain(haptic, 100);
+	centre();
+	SDL_Delay(5000);
+
+	// test 1
+	toConsole("Trying Constant Force Right...\n");
+	effect_id = runEffect(HE::CONSTANT_RIGHT, 100);
 	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
-	SDL_Delay(5000); // COMMENT THIS out to see 2 effects working simultaneously
+	SDL_Delay(5000);
+
+	// test 2
+	toConsole("Trying Constant Force Left...\n");
+	effect_id = runEffect(HE::CONSTANT_LEFT, 100);
+	if (effect_id == 0) toConsole("OK\n"); else toConsole("FAILED\n");
+	SDL_Delay(5000); 
 
 	// test 3
 	hapticSine();
@@ -271,6 +358,8 @@ void Wheel::hapticTest()
 // Init SDL and find joysticks / wheels with the right abilities
 void Wheel::init()
 {
+	
+
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC) < 0)
 	{
@@ -295,6 +384,7 @@ void Wheel::init()
 			// test each wheel upto MAX_WHEEL number
 			for (int i = 0; i < num_wheels && i < MAX_WHEELS; ++i)
 			{
+				SDL_JoystickEventState(SDL_ENABLE);
 				wheel = SDL_JoystickOpen(i);
 
 				// Open wheel
@@ -303,7 +393,11 @@ void Wheel::init()
 					// Display info 
 					std::string name = SDL_JoystickName(wheel);
 					std::string num = std::to_string(SDL_JoystickNumAxes(wheel));
-					haptic = SDL_HapticOpen(i);
+					haptic = setHaptic(i); ; // SDL_HapticOpen(i);
+					
+					
+					
+					
 					int nEffects = SDL_HapticNumEffects(haptic);
 					toConsole("Found <" + name + "> with axis [" + num + "]  Device# [" + std::to_string(i) + "] effects [" + std::to_string(nEffects) + "]\n");
 
@@ -349,7 +443,7 @@ void Wheel::init()
 		} // end we have wheels
 
 	} // end SDL init tests
-
+	
 	initEffect();
 
 } // end init
