@@ -173,10 +173,6 @@ void Wheel::centre()
 	// Find the centre as best we can
 	while ( pos > 20 || pos < -20 )
 	{	
-		// Force update so we can read position
-		SDL_JoystickUpdate();
-		pos = readWheelPosition();
-
 		// If we are to the right of centre
 		if (pos > 0)
 		{
@@ -196,10 +192,14 @@ void Wheel::centre()
 
 		// If close to middle, slow down
 		if (pos < 500 && pos > -500 ) SDL_Delay(100);
+
+		// Force update so we can read position
+		SDL_JoystickUpdate();
+		pos = readWheelPosition();
 	}
 
 	// Let it settle
-	waitForNoMovement();
+	SDL_Delay(1000);
 
 	// Output position 
 	SDL_JoystickUpdate();
