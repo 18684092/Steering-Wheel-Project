@@ -9,6 +9,86 @@ namespace HE
 		memset(&effect, 0, sizeof(SDL_HapticEffect));
 	}
 
+	// Set maximum wheel position
+	void hapticEffects::setMaxPosition(int32_t position)
+	{
+		maxPosition = position;
+	}
+
+	// Set minimum wheel position
+	void hapticEffects::setMinPosition(int32_t position)
+	{
+		minPosition = position;
+	}
+
+	// Get maximum wheel position
+	int32_t hapticEffects::getMaxPosition()
+	{
+		return minPosition;
+	}
+
+	// get minimum wheel position
+	int32_t hapticEffects::getMinPosition()
+	{
+		return minPosition;
+	}
+
+	// Find maximum wheel position
+	// uses Constant Force in right direction for 4 seconds
+	void hapticEffects::findMaxWheelPosition()
+	{
+		//Event handler
+		SDL_Event e;
+
+		int maxPosition = 0;
+
+		// Timer
+		std::clock_t start = std::clock();
+
+		while (std::clock() - start < 4000)
+		{
+			SDL_PollEvent(&e);
+			if (e.type == SDL_JOYAXISMOTION)
+			{
+				if (e.jaxis.value > maxPosition)
+				{
+					maxPosition = e.jaxis.value;
+				}
+			}
+		}
+
+		std::cout << "Max wheel position: " << maxPosition << std::endl;
+		setMaxPosition(maxPosition);
+	}
+
+
+	// Find minimum wheel position
+	// uses Constant Force in right direction for 4 seconds
+	void hapticEffects::findMinWheelPosition()
+	{
+		//Event handler
+		SDL_Event e;
+
+		int minPosition = 0;
+
+		// Timer
+		std::clock_t start = std::clock();
+
+		while (std::clock() - start < 4000)
+		{
+			SDL_PollEvent(&e);
+			if (e.type == SDL_JOYAXISMOTION)
+			{
+				if (e.jaxis.value < minPosition)
+				{
+					minPosition = e.jaxis.value;
+				}
+			}
+		}
+
+		std::cout << "Min wheel position: " << minPosition << std::endl;
+		setMinPosition(minPosition);
+	}
 	// Open Haptic Device
 	SDL_Haptic* hapticEffects::setHaptic(int device)
 	{
