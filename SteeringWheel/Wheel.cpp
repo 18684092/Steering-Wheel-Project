@@ -126,26 +126,44 @@ void Wheel::initEffect()
 	effect.periodic.fade_length = 50; // Takes 50ms to fade away
 	effect.periodic.fade_level = 0;
 
-	//// SDL_HAPTIC_CONSTANT;
-	//effect.constant.length = 10;
-	//effect.constant.delay = 0;
-	//effect.constant.level = 10000;
-	//effect.constant.attack_length = 0;
-	//effect.constant.attack_level = 0;
-	//effect.constant.fade_length = 0;
-	//effect.constant.fade_level = 0;
 }
 
+// Wait till wheel stops moving
+bool Wheel::waitForNoMovement()
+{
+	// Start timeout timer
+	std::clock_t start = std::clock();
+	int last = 1;
+	int current = 0;
+
+	// Wait till wheel stops moving
+	while (last != current)
+	{
+		SDL_JoystickUpdate();
+		current = readWheelPosition();
+		SDL_Delay(8);
+		last = readWheelPosition();
+
+		// Timed out return
+		if ((std::clock() - start) >= GENERAL_TIMEOUT) return false;
+	}
+
+	// return wheel stopped
+	return true;
+}
 
 void Wheel::centre()
 {
-
+	// Time of effect
 	Uint32 duration = 10;
 
-	int effect_left = setConstantForce(duration, 10000, HE::LEFT);
-	int effect_right = setConstantForce(duration, 10000, HE::RIGHT);
+	// Strength level
+	Uint16 level = 10000;
 
-	//std::cout << "L: " << effect_left << " R: " << effect_right << std::endl;
+	// Make effects
+	int effect_left = setConstantForce(duration, level, HE::LEFT);
+	int effect_right = setConstantForce(duration, level, HE::RIGHT);
+
 	std::cout << "Centering...";
 
 	// Force update as there is no event
@@ -154,96 +172,39 @@ void Wheel::centre()
 
 	// Find the centre as best we can
 	while ( pos > 20 || pos < -20 )
-	{		
+	{	
+		// Force update so we can read position
 		SDL_JoystickUpdate();
 		pos = readWheelPosition();
+
+		// If we are to the right of centre
 		if (pos > 0)
 		{
 			runEffect(HE::CONSTANT_LEFT, 1);
 
-			if (pos > 500) SDL_Delay(duration - 2); else
-			{
-				while (SDL_HapticGetEffectStatus(haptic, effect_left)) SDL_Delay(1);
-				int last = 1;
-				int current = 0;
-				while (last != current)
-				{
-					//SDL_JoystickUpdate();
-					current = readWheelPosition();
-					SDL_Delay(duration + 2);
-					//SDL_JoystickUpdate();
-					last = readWheelPosition();
-				}
-			}
+			// For large movements let effect run but not to the end to avoid vibration
+			if (pos > 500) SDL_Delay(duration - 2); else waitForNoMovement();
 		}
+		// If we are left of centre
 		else if (pos < 0)
 		{
-			
 			runEffect(HE::CONSTANT_RIGHT, 1);
 
-			if (pos < -500) SDL_Delay(duration - 2); else 
-			{
-				while (SDL_HapticGetEffectStatus(haptic, effect_left)) SDL_Delay(1);
-				int last = 1;
-				int current = 0;
-				while (last != current)
-				{
-					//SDL_JoystickUpdate();
-					current = readWheelPosition();
-					SDL_Delay(duration + 2);
-					//SDL_JoystickUpdate();
-					last = readWheelPosition();
-				}
-			}
+			// For large movements let effect run but not to the end to avoid vibration
+			if (pos < -500) SDL_Delay(duration - 2); else waitForNoMovement();
 		}
 
+		// If close to middle, slow down
 		if (pos < 500 && pos > -500 ) SDL_Delay(100);
 	}
 
 	// Let it settle
-	SDL_Delay(1000);
+	waitForNoMovement();
+
+	// Output position 
 	SDL_JoystickUpdate();
 	std::cout << "done (pos=" << readWheelPosition() << ")" << std::endl;
 }
-
-//// See SDL_Haptic.h
-//void Wheel::hapticConstantRight()
-//{
-//	effect.type = SDL_HAPTIC_CONSTANT;
-//	hapticSetDirectionC('W');
-//}
-//
-//
-//// See SDL_Haptic.h
-//void Wheel::hapticConstantLeft()
-//{
-//	effect.type = SDL_HAPTIC_CONSTANT;
-//	hapticSetDirectionC('E');
-//}
-//
-//// Set Direction for CONSTANT effect
-//void Wheel::hapticSetDirectionC(char d)
-//{
-//	effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
-//	effect.constant.direction.dir[0] = 0;
-//	effect.constant.direction.dir[1] = 0;
-//	effect.constant.direction.dir[2] = 0; // not used - included for completeness
-//	switch (d)
-//	{
-//	case 'E':
-//		effect.constant.direction.dir[0] = 1; 
-//		break;
-//	case 'W':
-//		effect.constant.direction.dir[0] = -1; 
-//		break;
-//	case 'N':
-//		effect.constant.direction.dir[1] = -1;
-//		break;
-//	case 'S':
-//	default:
-//		effect.constant.direction.dir[1] = 1;
-//	}
-//}
 
 // Helper function to send effect to wheel controller
 int Wheel::uploadExecuteEffect()

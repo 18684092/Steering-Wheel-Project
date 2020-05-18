@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+#include <ctime>
 #include "hapticEffects.h"
 
 
@@ -16,6 +17,7 @@ const int MAX_WHEELS = 1;
 const uint8_t HAPTIC = 1;
 const uint8_t NON_HAPTIC = 2;
 const uint8_t ERROR = -1;
+const clock_t GENERAL_TIMEOUT = 1000;
 
 class Wheel : public HE::hapticEffects
 {
@@ -41,6 +43,7 @@ public:
 	int readWheelPosition();
 	int getNumberOfButtons();
 	void centre();
+	bool waitForNoMovement();
 	uint8_t deviceIndex[MAX_WHEELS]= { ERROR };			
 	SDL_Joystick* wheel = nullptr;
 	SDL_Haptic* haptic = nullptr;
