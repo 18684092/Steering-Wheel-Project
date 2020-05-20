@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include "hapticEffects.h"
+#include "Profile.h"
 
 
 //Analog joystick dead zone
@@ -28,11 +29,9 @@ private:
 	void hapticSine();
 	void hapticTriangle();
 	void hapticSawToothUp();
-	//void hapticConstantRight();
-	//void hapticConstantLeft();
 	void spring();
 	void initEffect();
-	//void hapticSetDirectionC(char d);
+
 	int uploadExecuteEffect();
 	SDL_HapticEffect effect;
 
@@ -44,7 +43,10 @@ public:
 	int getNumberOfButtons();
 	void centre();
 	bool waitForNoMovement();
+	void profiler();
+
 	uint8_t deviceIndex[MAX_WHEELS]= { ERROR };			
+	
 	SDL_Joystick* wheel = nullptr;
 	SDL_Haptic* haptic = nullptr;
 

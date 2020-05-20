@@ -167,11 +167,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="hapticEffects.cpp" />
+    <ClCompile Include="Profile.cpp" />
     <ClCompile Include="SteeringWheel.cpp" />
     <ClCompile Include="Wheel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hapticEffects.h" />
+    <ClInclude Include="Profile.h" />
     <ClInclude Include="Wheel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

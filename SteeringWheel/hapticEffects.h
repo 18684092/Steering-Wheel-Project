@@ -6,6 +6,8 @@
 #include <climits>
 #include <ctime>
 #include <iostream>
+#include <list>
+#include "Profile.h"
 
 namespace HE
 {
@@ -19,6 +21,8 @@ namespace HE
 	constexpr auto MIN_DURATION = 10;
 	constexpr auto MIN_LEVEL = 0;
 
+
+
 	// Define Object
 	class hapticEffects
 	{
@@ -27,17 +31,26 @@ namespace HE
 		SDL_Haptic* haptic = nullptr;
 		std::map<int, int> effectsMap = { {CONSTANT_LEFT, -1}, {CONSTANT_RIGHT, -1} };
 		int32_t maxPosition, minPosition; // stores max / min wheel position that was found
+		
+		// Stores profile of power levels in 10 mS intervals
+		//std::list<HE::Profile> profileLeft[33];
+		//std::list<HE::Profile> profileRight[33];
+
 
 	public:
 		int setConstantForce(Uint32 mS, Uint16 level, int direction);
-		SDL_Haptic* setHaptic(int device);
 		int runEffect(int effect, Uint32 iterations);
 		void setMaxPosition(int32_t position);
-		int32_t getMaxPosition();
 		void setMinPosition(int32_t position);
-		int32_t getMinPosition();
 		void findMaxWheelPosition();
 		void findMinWheelPosition();
+
+		int32_t getMaxPosition();
+		int32_t getMinPosition();
+		SDL_Haptic* setHaptic(int device);
+
+		std::list<HE::Profile> profileLeft[33];
+		std::list<HE::Profile> profileRight[33];
 		
 		// Constructor
 		hapticEffects();

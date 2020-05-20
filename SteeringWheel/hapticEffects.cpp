@@ -2,7 +2,6 @@
 
 namespace HE
 {
-
 	// Constructor sets effect structure
 	hapticEffects::hapticEffects()
 	{

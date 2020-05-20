@@ -52,6 +52,7 @@ int main(int argc, char* args[])
 	// Centre the wheel
 	wheel.centre();
 
+	wheel.profiler();
 
 
 	SDL_JoystickUpdate();
@@ -72,7 +73,7 @@ int main(int argc, char* args[])
 		{
 			// Time now
 			clock_t now = clock();
-
+			
 			////////////
 			// Events //
 			////////////
@@ -80,7 +81,7 @@ int main(int argc, char* args[])
 			{
 				// Keyboard
 				case SDL_KEYDOWN:
-						
+					// News a window opening for this event to work
 					break;
 
 				// QUIT
@@ -154,6 +155,11 @@ int main(int argc, char* args[])
 					if (e.jbutton.button == 7)
 					{
 						wheel.centre();
+					}
+
+					if (e.jbutton.button == 20)
+					{
+						wheel.profiler();
 					}
 					break;
 			}

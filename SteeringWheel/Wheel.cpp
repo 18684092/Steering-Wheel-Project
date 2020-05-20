@@ -1,5 +1,139 @@
 #include "Wheel.h"
 
+// Creates a profile array of motor forces
+void Wheel::profiler()
+{
+	std::clock_t startTime;
+	int duration = 1000; // 10 milli Seconds
+	int count; // number of readings
+	int position; // position of the wheel when reading taken
+	int effect_right;
+	int effect_left;
+	bool useRight = false;
+
+	// set gain to 100
+	SDL_HapticSetGain(haptic, 100);
+	SDL_Event e;
+	int i = 0;
+	for (int powerLevel = 0; powerLevel < 33; ++powerLevel)
+	{
+		SDL_Delay(500);
+		std::cout << "Power: " << powerLevel << std::endl;
+		// centre wheel
+		centre();
+
+		
+
+		//HE::Profile profile;
+	
+
+		bool done = false;
+
+		
+		int min = 32767;
+		bool stationary;
+		int last = 32767;
+		int current = 0;
+		while (!done)
+		{
+			// Reset vars
+			stationary = false;
+			current = 0;
+			min = 3276;
+			last = 32767;
+
+			// Clear buffer / queue
+			while (SDL_PollEvent(&e)) SDL_Delay(1);
+
+			if (useRight)
+			{
+				std::cout << "Using right offset" << std::endl;
+				//centre();
+				effect_right = setConstantForce(200, 10000, HE::RIGHT);
+				runEffect(HE::CONSTANT_RIGHT, i);
+				SDL_Delay(200 * (i + 1));
+				while (SDL_PollEvent(&e)) SDL_Delay(1);
+			}
+
+			// Setup constant force for 1 second
+			effect_left = setConstantForce(duration, powerLevel * 1000, HE::LEFT);
+
+			// Move the wheel for 1 second
+			runEffect(HE::CONSTANT_LEFT, 1);
+			SDL_Delay(100);
+
+			while (!stationary)
+			{
+				// Find how far it travelled
+				while (SDL_PollEvent(&e) != 0)
+				{
+					if (e.type == SDL_JOYAXISMOTION)
+					{
+						// Where are we?
+						current = e.jaxis.value;
+
+						// Have we been this far before?
+						if (current < min) min = current;
+					}
+					// Lets not rush
+					SDL_Delay(5);
+				}
+				// Let it settle
+				SDL_Delay(10);
+
+				// Have we stopped?
+				if (current == last) stationary = true;
+				last = current;
+			}
+			
+			// Take a breath!
+			SDL_Delay(100);
+
+			// check movement doesn't hit end stop
+			if (min > -31000) done = true; 
+			else
+			// We over shot, change start position
+			{
+				std::cout << "Too close to end" << std::endl;
+				if (min < -32500) std::cout << "Hit End Stop!!!" << std::endl;
+				centre();
+
+				// Move a little more than before
+				i += 1;
+				useRight = true;
+
+				// Centre() over writes this	
+				effect_right = setConstantForce(200, 10000, HE::RIGHT);
+				
+				// A little info is helpful
+				std::cout << "Move right: " << i << std::endl;
+
+				// Move back more than before! Saves time.
+				runEffect(HE::CONSTANT_RIGHT, i);
+
+				// Wait for movement to finish
+				SDL_Delay(200 * (i + 1));
+				
+				//min = 32767;
+				
+			}
+			
+		}
+		
+		std::cout << "We could measure this power level (" << (powerLevel *1000) << ") ";
+		if(useRight) std::cout << "with right start of (200 mS * " << i << ")";
+		std::cout << std::endl;
+
+		// record movement
+
+		// move wheel full left
+		// set constantforce to right for 1 second at powerlevel * 1000
+		// record movement
+		SDL_Delay(100);
+
+	}
+	SDL_Delay(1000);
+}
 
 // Simply display on console
 void Wheel::toConsole(std::string msg)
@@ -131,6 +265,9 @@ void Wheel::initEffect()
 // Wait till wheel stops moving
 bool Wheel::waitForNoMovement()
 {
+
+	// TODO check this function - seems to work sometimes but not all
+
 	// Start timeout timer
 	std::clock_t start = std::clock();
 	int last = 1;
@@ -142,6 +279,7 @@ bool Wheel::waitForNoMovement()
 		SDL_JoystickUpdate();
 		current = readWheelPosition();
 		SDL_Delay(8);
+
 		last = readWheelPosition();
 
 		// Timed out return
