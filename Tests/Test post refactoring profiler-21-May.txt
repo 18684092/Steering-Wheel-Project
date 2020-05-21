@@ -1,0 +1,182 @@
+Wheel: Found <Logitech G27 Racing Wheel USB> with axis [5]  Device# [0] effects [128]
+Wheel: has haptic ability
+Wheel: Haptic Abilities
+Wheel: ----------------
+Wheel: has sine effect
+Wheel: has constant effect
+Wheel: has triangle wave effect
+Wheel: has saw tooth up effect
+Wheel: has saw tooth down effect
+Wheel: has ramp effect
+Wheel: has spring effect
+Wheel: has damper effect
+Wheel: has inertia effect
+Wheel: has friction effect
+Wheel: has custom effect
+Wheel: can set gain
+Wheel: can be paused
+Wheel: can have its status queried
+Wheel: support haptic rumble
+Max wheel position: 32767
+Min wheel position: -32768
+Centering...done (pos=13)
+Profiling wheel motor
+---------------------
+Power Level : 0
+Centering...done (pos=13)
+We could measure this power level (0)
+Power Level : 1000
+Centering...done (pos=13)
+We could measure this power level (1000)
+Power Level : 2000
+Centering...done (pos=13)
+We could measure this power level (2000)
+Power Level : 3000
+Centering...done (pos=13)
+We could measure this power level (3000)
+Power Level : 4000
+Centering...done (pos=13)
+We could measure this power level (4000)
+Power Level : 5000
+Centering...done (pos=13)
+We could measure this power level (5000)
+Power Level : 6000
+Centering...done (pos=13)
+We could measure this power level (6000)
+Power Level : 7000
+Centering...done (pos=1)
+We could measure this power level (7000)
+Power Level : 8000
+Centering...done (pos=29)
+We could measure this power level (8000)
+Power Level : 9000
+Centering...done (pos=1)
+We could measure this power level (9000)
+Power Level : 10000
+Centering...done (pos=13)
+We could measure this power level (10000)
+Power Level : 11000
+Centering...done (pos=-8)
+We could measure this power level (11000)
+Power Level : 12000
+Centering...done (pos=-8)
+We could measure this power level (12000)
+Power Level : 13000
+Centering...done (pos=-8)
+We could measure this power level (13000)
+Power Level : 14000
+Centering...done (pos=13)
+We could measure this power level (14000)
+Power Level : 15000
+Centering...done (pos=13)
+We could measure this power level (15000)
+Power Level : 16000
+Centering...done (pos=-8)
+We could measure this power level (16000)
+Power Level : 17000
+Centering...done (pos=1)
+We could measure this power level (17000)
+Power Level : 18000
+Centering...done (pos=13)
+Too close to end
+Centering...done (pos=13)
+Move right: 1
+Using right offset
+We could measure this power level (18000) with right start of (200 mS * 1)
+Power Level : 19000
+Centering...done (pos=13)
+Using right offset
+We could measure this power level (19000) with right start of (200 mS * 1)
+Power Level : 20000
+Centering...done (pos=1)
+Using right offset
+Too close to end
+Centering...done (pos=13)
+Move right: 2
+Using right offset
+We could measure this power level (20000) with right start of (200 mS * 2)
+Power Level : 21000
+Centering...done (pos=-8)
+Using right offset
+We could measure this power level (21000) with right start of (200 mS * 2)
+Power Level : 22000
+Centering...done (pos=13)
+Using right offset
+Too close to end
+Centering...done (pos=1)
+Move right: 3
+Using right offset
+We could measure this power level (22000) with right start of (200 mS * 3)
+Power Level : 23000
+Centering...done (pos=13)
+Using right offset
+Too close to end
+Centering...done (pos=13)
+Move right: 4
+Using right offset
+We could measure this power level (23000) with right start of (200 mS * 4)
+Power Level : 24000
+Centering...done (pos=1)
+Using right offset
+Too close to end
+Centering...done (pos=13)
+Move right: 5
+Using right offset
+We could measure this power level (24000) with right start of (200 mS * 5)
+Power Level : 25000
+Centering...done (pos=1)
+Using right offset
+We could measure this power level (25000) with right start of (200 mS * 5)
+Power Level : 26000
+Centering...done (pos=-8)
+Using right offset
+Too close to end
+Centering...done (pos=13)
+Move right: 6
+Using right offset
+We could measure this power level (26000) with right start of (200 mS * 6)
+Power Level : 27000
+Centering...done (pos=-36)
+Using right offset
+We could measure this power level (27000) with right start of (200 mS * 6)
+Power Level : 28000
+Centering...done (pos=13)
+Using right offset
+Too close to end
+Centering...done (pos=13)
+Move right: 7
+Using right offset
+We could measure this power level (28000) with right start of (200 mS * 7)
+Power Level : 29000
+Centering...done (pos=1)
+Using right offset
+We could measure this power level (29000) with right start of (200 mS * 7)
+Power Level : 30000
+Centering...done (pos=13)
+Using right offset
+Too close to end
+Hit End Stop!!!
+Centering...done (pos=-8)
+Move right: 8
+Using right offset
+We could measure this power level (30000) with right start of (200 mS * 8)
+Power Level : 31000
+Centering...done (pos=-8)
+Using right offset
+Too close to end
+Hit End Stop!!!
+Centering...done (pos=1)
+Move right: 9
+Using right offset
+We could measure this power level (31000) with right start of (200 mS * 9)
+Power Level : 32000
+Centering...done (pos=-8)
+Using right offset
+Too close to end
+Hit End Stop!!!
+Centering...done (pos=13)
+Move right: 10
+Using right offset
+We could measure this power level (32000) with right start of (200 mS * 10)
+Profiling wheel motor end
+-------------------------

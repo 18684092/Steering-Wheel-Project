@@ -50,6 +50,9 @@ private:
 	void hapticSawToothUp();
 	void spring();
 	void initEffect();
+	void moveRightByOffset(SDL_Event& e, const Uint32 offsetDuration, const int i);
+	void flushEventQueue(SDL_Event& e, const int eventType);
+	void moveRightIncreaseOffset(const Uint32 offsetDuration, int &i, const Sint16 min, bool &useRight);
 
 	// Min holds the left most position when stopped - NOT the actual position
 	// because an end stop bounce may have happened
