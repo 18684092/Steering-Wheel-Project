@@ -23,8 +23,8 @@ void Wheel::profiler()
 	}
 
 	// Some defaults
-	int duration = 1000;		// 1000 milli Seconds for effect to run (left movement)
-	int offsetDuration = 200;	// 200 mS for offset effect (right movement)
+	Uint32 duration = 1000;			// 1000 milli Seconds for effect to run (left movement)
+	Uint32 offsetDuration = 200;	// 200 mS for offset effect (right movement)
 
 	int effect_right, effect_left;
 	bool useRight = false;	// Shall we use an offset?
@@ -37,7 +37,7 @@ void Wheel::profiler()
 	SDL_Event e;
 
 	// Loop through all power levels
-	for (int powerLevel = 0; powerLevel < 33; ++powerLevel)
+	for (Uint16 powerLevel = 0; powerLevel < 33; ++powerLevel)
 	{
 		// Just easier to see whats going on - slow down
 		SDL_Delay(100);
@@ -85,6 +85,8 @@ void Wheel::profiler()
 			
 			// Take a breath!
 			SDL_Delay(100);
+
+			// TODO need to deal with both end stops + and - HIT_END_STOP
 
 			// check movement doesn't hit end stop
 			if (min > -HE::TOO_CLOSE_TO_END_STOP) done = true; 
@@ -332,6 +334,7 @@ bool Wheel::waitForNoMovement()
 {
 
 	// TODO check this function - seems to work sometimes but not all
+	// TODO use eventpolling is the way to go here
 
 	// Start timeout timer
 	std::clock_t start = std::clock();

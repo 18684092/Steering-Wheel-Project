@@ -183,4 +183,33 @@ namespace HE
 	
 	} // end setConstantForce
 
+
+
+	// Set direction property
+	void Profile::sDirection(Sint8 dir)
+	{
+		direction = (dir == ::HE::LEFT || dir == HE::RIGHT) ? dir : HE::BAD_DIRECTION;
+	}
+
+	// Return profile direction
+	Sint8 Profile::gDirection()
+	{
+		return direction;
+	}
+
+	// Set this reading's index
+	void Profile::sReading(Sint8 read)
+	{
+		// reading numbers are an index 
+		reading = (read < 0) ? HE::BAD_PROFILE_INDEX : read;
+	}
+
+	// Return reading index number
+	Sint8 Profile::gReading()
+	{
+		return reading;
+	}
+
+
+
 } // end namespace HE

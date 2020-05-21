@@ -24,18 +24,12 @@
     <ClCompile Include="hapticEffects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Profile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Wheel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hapticEffects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Profile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

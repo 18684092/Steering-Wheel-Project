@@ -7,7 +7,22 @@
 #include <ctime>
 #include <ctype.h> // TODO do we need this?
 #include "hapticEffects.h"
-#include "Profile.h"
+
+
+// TODO - move all haptic effects to their own class
+// Constant force has been moved
+
+// TODO - at startup remove all wheel controller effects
+// we only want our own. This can be made optional so that
+// we can still use the driver defaults (ie, spring, end stops)
+// Ideally we want out own end stops 
+
+// TODO - remember any driver can stop us from modifying effects
+// how do we over come this?
+
+// TODO - how can we read the drivers "degrees of rotation"?
+
+// TODO - check on inheritance access / public / protected etc
 
 // Send debug output messages to console
 const bool WHEEL_DEBUG_OUTPUT = true;
