@@ -1,5 +1,6 @@
-﻿  Wheel.cpp
-C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Wheel.cpp(8,6): warning C4101: 'count': unreferenced local variable
-C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Wheel.cpp(9,6): warning C4101: 'position': unreferenced local variable
-C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Wheel.cpp(6,15): warning C4101: 'startTime': unreferenced local variable
+﻿  hapticEffects.cpp
+  Profile.cpp
+  SteeringWheel.cpp
+  Wheel.cpp
+  Generating Code...
   SteeringWheel.vcxproj -> C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Debug\SteeringWheel.exe

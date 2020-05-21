@@ -1,157 +1,222 @@
 #include "Wheel.h"
 
 // Creates a profile array of motor forces
+// Stores profile in hapticEffects object
 void Wheel::profiler()
 {
-	std::clock_t startTime;
-	int duration = 1000; // 10 milli Seconds
-	int count; // number of readings
-	int position; // position of the wheel when reading taken
-	int effect_right;
-	int effect_left;
-	bool useRight = false;
+	////////////////////////////////////////////////////
+	// We like comments just like the WHO likes tests //
+	//                                                //
+	// Some days it makes us feel like we have        //
+	// done a lot of programming and bug fixing when  //
+	// really all we have done is explain this crap   //
+	// so that future me thinks I did a really good   //
+	// job :)                                         //
+	////////////////////////////////////////////////////
 
-	// set gain to 100
+	// TODO - encapsulate some of this into functions !!!
+
+	if (WHEEL_DEBUG_OUTPUT)
+	{
+		std::cout << "Profiling wheel motor" << std::endl;
+		std::cout << "---------------------" << std::endl;
+	}
+
+	// Some defaults
+	int duration = 1000;		// 1000 milli Seconds for effect to run (left movement)
+	int offsetDuration = 200;	// 200 mS for offset effect (right movement)
+
+	int effect_right, effect_left;
+	bool useRight = false;	// Shall we use an offset?
+	int i = 0;				// iterations of right offset
+
+	// set gain to 100 - just so we know
 	SDL_HapticSetGain(haptic, 100);
+
+	// We will be using SDL_JOYAXISMOTION type
 	SDL_Event e;
-	int i = 0;
+
+	// Loop through all power levels
 	for (int powerLevel = 0; powerLevel < 33; ++powerLevel)
 	{
-		SDL_Delay(500);
-		std::cout << "Power: " << powerLevel << std::endl;
+		// Just easier to see whats going on - slow down
+		SDL_Delay(100);
+
+		if (WHEEL_DEBUG_OUTPUT) std::cout << "Power Level : " << (powerLevel * 1000) << std::endl;
+		
 		// centre wheel
 		centre();
-
 		
-
-		//HE::Profile profile;
-	
-
 		bool done = false;
+		Sint16 min;
 
-		
-		int min = 32767;
-		bool stationary;
-		int last = 32767;
-		int current = 0;
 		while (!done)
 		{
-			// Reset vars
-			stationary = false;
-			current = 0;
-			min = 3276;
-			last = 32767;
+			// Set to sensible defaults 
+			min = SDL_MAX_SINT16; // wheel is centred - can't be here
 
 			// Clear buffer / queue
 			while (SDL_PollEvent(&e)) SDL_Delay(1);
 
+			// We are centred - if the last powerLevel required a right offset then use it
 			if (useRight)
 			{
-				std::cout << "Using right offset" << std::endl;
-				//centre();
-				effect_right = setConstantForce(200, 10000, HE::RIGHT);
+				if (WHEEL_DEBUG_OUTPUT) std::cout << "Using right offset" << std::endl;
+				effect_right = setConstantForce(offsetDuration, HE::SAFE_POWER_LEVEL, HE::RIGHT);
 				runEffect(HE::CONSTANT_RIGHT, i);
-				SDL_Delay(200 * (i + 1));
+				SDL_Delay(offsetDuration * (i + 1));
+
+				// flush queue
 				while (SDL_PollEvent(&e)) SDL_Delay(1);
 			}
 
 			// Setup constant force for 1 second
-			effect_left = setConstantForce(duration, powerLevel * 1000, HE::LEFT);
+			effect_left = setConstantForce(duration, (powerLevel * 1000), HE::LEFT);
 
-			// Move the wheel for 1 second
+			// Start to move the wheel - SDL_Events should now be generated
 			runEffect(HE::CONSTANT_LEFT, 1);
-			SDL_Delay(100);
 
-			while (!stationary)
-			{
-				// Find how far it travelled
-				while (SDL_PollEvent(&e) != 0)
-				{
-					if (e.type == SDL_JOYAXISMOTION)
-					{
-						// Where are we?
-						current = e.jaxis.value;
+			// Seems without this delay we check for movement too early
+			// Motor needs to build up power before it can move
+			SDL_Delay(50); // TODO arbitary time delay? Too much / little? 
 
-						// Have we been this far before?
-						if (current < min) min = current;
-					}
-					// Lets not rush
-					SDL_Delay(5);
-				}
-				// Let it settle
-				SDL_Delay(10);
-
-				// Have we stopped?
-				if (current == last) stationary = true;
-				last = current;
-			}
+			// Min holds the left most position when the wheel stopped
+			leftMostPositionWhenStopped(e, min);
 			
 			// Take a breath!
 			SDL_Delay(100);
 
 			// check movement doesn't hit end stop
-			if (min > -31000) done = true; 
+			if (min > -HE::TOO_CLOSE_TO_END_STOP) done = true; 
 			else
 			// We over shot, change start position
 			{
-				std::cout << "Too close to end" << std::endl;
-				if (min < -32500) std::cout << "Hit End Stop!!!" << std::endl;
+				if (WHEEL_DEBUG_OUTPUT)
+				{
+					std::cout << "Too close to end" << std::endl;
+					if (min < -HE::HIT_END_STOP)
+					{
+						std::cout << "Hit End Stop!!!" << std::endl;
+					}
+				}
+
+				// Get to a known position
 				centre();
 
-				// Move a little more than before
-				i += 1;
+				// Move a little more right than before
+				i += 1; // maybe +2?
+
+				// From now on use a right offset
 				useRight = true;
 
 				// Centre() over writes this	
-				effect_right = setConstantForce(200, 10000, HE::RIGHT);
+				effect_right = setConstantForce(offsetDuration, HE::SAFE_POWER_LEVEL, HE::RIGHT);
 				
 				// A little info is helpful
-				std::cout << "Move right: " << i << std::endl;
+				if (WHEEL_DEBUG_OUTPUT) std::cout << "Move right: " << i << std::endl;
 
 				// Move back more than before! Saves time.
 				runEffect(HE::CONSTANT_RIGHT, i);
 
 				// Wait for movement to finish
-				SDL_Delay(200 * (i + 1));
-				
-				//min = 32767;
-				
+				SDL_Delay(offsetDuration * (i + 1));
 			}
 			
 		}
 		
-		std::cout << "We could measure this power level (" << (powerLevel *1000) << ") ";
-		if(useRight) std::cout << "with right start of (200 mS * " << i << ")";
-		std::cout << std::endl;
+		// We now know that the right offset will allow 1 second of wheel travel
+		// without hitting or being too close to end stops
+		// we can now re-run the movement but this time record it
 
+		//HE::Profile profile;
+		if (WHEEL_DEBUG_OUTPUT)
+		{
+			std::cout << "We could measure this power level (" << (powerLevel * 1000) << ") ";
+			if (useRight) std::cout << "with right start of (200 mS * " << i << ")";
+			std::cout << std::endl;
+		}
 		// record movement
 
-		// move wheel full left
-		// set constantforce to right for 1 second at powerlevel * 1000
-		// record movement
+		// move wheel right if needed
+		// set constantforce to left for 1 second at powerlevel * 1000
+		// record movement in 10mS intervals
+		// store in HE structure - presumably we'll save to file as well
+		// so we don't have to always go through a labourious process each time
+		
+
+		// Before next power level, just pause, helps to see whats going on
+		// visually - part of diagnostic testing and bug finding. It does no harm
 		SDL_Delay(100);
-
 	}
+
+	// The world moves too fast, just chill allow any movement to finish for certain
 	SDL_Delay(1000);
+
+	if (WHEEL_DEBUG_OUTPUT)
+	{
+		std::cout << "Profiling wheel motor end" << std::endl;
+		std::cout << "-------------------------" << std::endl;
+	}
+}
+
+// Keep polling xaxis and find the left most position (min)
+// before it stopped. Min is NOT the actual position of wheel
+// because an end stop bounce may have ocurred
+// Pass in event and min variable - both could be altered
+void Wheel::leftMostPositionWhenStopped(SDL_Event &e, Sint16 &min )
+{
+	bool stationary = false;
+
+	// Set to sensible defaults
+	Sint16 current = SDL_MIN_SINT16;	// wheel is centred - can't be here
+	Sint16 last = SDL_MAX_SINT16;		// Ditto
+
+	while (!stationary)
+	{
+		// Find how far it travelled
+		while (SDL_PollEvent(&e) != 0)
+		{
+			if (e.type == SDL_JOYAXISMOTION)
+			{
+				// Where are we?
+				current = e.jaxis.value;
+
+				// Have we been this far before?
+				if (current < min) min = current;
+			}
+			// Lets not rush
+			SDL_Delay(5);
+		}
+		// Let it settle
+		SDL_Delay(10);
+
+		// Have we stopped?
+		if (current == last) stationary = true;
+		last = current;
+	}
 }
 
 // Simply display on console
-void Wheel::toConsole(std::string msg)
+void Wheel::toConsole(const std::string msg)
 {
 	std::cout << "Wheel: " << msg;
 }
 
+// Constructor just zeros SDL_HapticEffect
 Wheel::Wheel()
 {
 	memset(&effect, 0, sizeof(SDL_HapticEffect)); // 0 is safe default
 }
 
+// Gets x axis and returns position
 int Wheel::readWheelPosition()
 {
+	// TODO need to add joystick update test to see if events are pending
 	int pos = SDL_JoystickGetAxis(wheel, 0);
 	return pos;
 }
 
+// Joysticks and wheels may or may not have buttons
 int Wheel::getNumberOfButtons()
 {
 	return SDL_JoystickNumButtons(wheel);
@@ -457,7 +522,9 @@ void Wheel::hapticTest()
 // Init SDL and find joysticks / wheels with the right abilities
 void Wheel::init()
 {
-	
+	// TODO we cant read keyboard events until a screen is initialised !!!
+	// remember this rather than spending an hour working out why keybrd
+	// isnt working you muppet!
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC) < 0)
@@ -493,9 +560,6 @@ void Wheel::init()
 					std::string name = SDL_JoystickName(wheel);
 					std::string num = std::to_string(SDL_JoystickNumAxes(wheel));
 					haptic = setHaptic(i); ; // SDL_HapticOpen(i);
-					
-					
-					
 					
 					int nEffects = SDL_HapticNumEffects(haptic);
 					toConsole("Found <" + name + "> with axis [" + num + "]  Device# [" + std::to_string(i) + "] effects [" + std::to_string(nEffects) + "]\n");

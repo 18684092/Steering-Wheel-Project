@@ -11,15 +11,21 @@
 
 namespace HE
 {
-	// Define NS constants
+	// Define EFFECT MAP constants
 	constexpr auto CONSTANT_LEFT = 0;
 	constexpr auto CONSTANT_RIGHT = 1;
 
-
+	// General constants
 	constexpr auto LEFT = 1;
 	constexpr auto RIGHT = -1;
 	constexpr auto MIN_DURATION = 10;
 	constexpr auto MIN_LEVEL = 0;
+
+	// General settings
+	constexpr auto SAFE_POWER_LEVEL = 10000;
+	constexpr auto TOO_CLOSE_TO_END_STOP = 31000;
+	constexpr auto HIT_END_STOP = 32500;
+
 
 
 
