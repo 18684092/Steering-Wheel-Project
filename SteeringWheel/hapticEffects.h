@@ -33,17 +33,22 @@ namespace HE
 	// Object holds profiling details
 	class Profile
 	{
-	private:
+	public:
 		Sint8 direction; // 1 means right, -1 means left
 		Sint8 reading; // reading number
 		double delta; // rate of change
-		Uint16 from; // postion
-		Uint16 to; // position
+		Sint16 from; // postion
+		Sint16 to; // position
 		Uint16 power; // level of effect
-		Uint16 distance; // how far moves
+		Sint16 distance; // how far moves
 		clock_t timeStamp; // Time reading was taken
+		bool freeWheel;
+		bool timedOut;
+		clock_t timeToMove; // time from command to 1st movement
 
 	public:
+		Profile();
+
 		// Getters and Setters
 		void sDirection(Sint8 dir);
 		Sint8 gDirection();
@@ -81,8 +86,8 @@ namespace HE
 		SDL_Haptic* setHaptic(int device);
 
 		// Stores profile of power levels in 10 mS intervals
-		std::list<Profile> profileLeft[MAX_POWER_LEVEL + 1];
-		std::list<Profile> profileRight[MAX_POWER_LEVEL + 1];
+		Profile profileLeft[MAX_POWER_LEVEL + 1][200];
+		Profile profileRight[MAX_POWER_LEVEL + 1][200];
 		
 		// Constructor
 		hapticEffects();

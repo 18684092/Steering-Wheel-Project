@@ -183,7 +183,21 @@ namespace HE
 	
 	} // end setConstantForce
 
-
+	// Constructor
+	Profile::Profile()
+	{
+		direction = BAD_DIRECTION;
+		reading = BAD_PROFILE_INDEX;
+		delta = 0;
+		from = NULL;
+		to = NULL;
+		power = NULL;
+		distance = NULL;
+		timeStamp = NULL;
+		freeWheel = false;
+		timedOut = false;
+		timeToMove = NULL;
+	}
 
 	// Set direction property
 	void Profile::sDirection(Sint8 dir)

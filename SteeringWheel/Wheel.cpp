@@ -43,7 +43,7 @@ void Wheel::profiler()
 	SDL_Event e;
 
 	// Loop through all power levels
-	for (Uint16 powerLevel = 0; powerLevel < 33; ++powerLevel)
+	for (Uint16 powerLevel = HE::MIN_POWER_LEVEL; powerLevel <= HE::MAX_POWER_LEVEL; ++powerLevel)
 	{
 		// Just easier to see whats going on - slow down
 		SDL_Delay(100);
@@ -104,13 +104,14 @@ void Wheel::profiler()
 		// without hitting or being too close to end stops
 		// we can now re-run the movement but this time record it
 
-		//HE::Profile profile;
 		if (WHEEL_DEBUG_OUTPUT)
 		{
-			std::cout << "We could measure this power level (" << (powerLevel * 1000) << ") ";
+			std::cout << "Power level (" << (powerLevel * 1000) << ") start position known ";
 			if (useRight) std::cout << "with right start of (200 mS * " << i << ")";
 			std::cout << std::endl;
 		}
+
+		profilePowerLevel(i, powerLevel, duration, offsetDuration, useRight);
 		// record movement
 
 		// move wheel right if needed
@@ -135,6 +136,89 @@ void Wheel::profiler()
 		std::cout << "-------------------------" << std::endl;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//                     //
+// profilePowerLevel() //
+//                     //
+/////////////////////////
+
+// Profile this power level
+void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32 duration,
+	const Uint32 offsetDuration, const bool useRight)
+{
+	if (WHEEL_DEBUG_OUTPUT)
+	{
+		std::cout << "Profiling power level: " << (powerLevel * 1000) << " ";
+		if (useRight)
+		{
+			std::cout << "with right offset of " << (offsetDuration * i) << " mS ";
+			std::cout << "at power level: " << HE::SAFE_POWER_LEVEL;
+		}
+		std::cout << std::endl;
+	}
+
+	//return; // TEMP - REMOVE
+
+	SDL_Event e;
+	int index = 0;
+
+	// Start Storing Profile Details
+	profileLeft[powerLevel][index].power = powerLevel;
+	profileLeft[powerLevel][index].reading = index;
+	
+	// Get to known starting position
+	centre();
+
+	// We are centred - if the last powerLevel required a right offset then use it
+	if (useRight) moveRightByOffset(e, offsetDuration, i);
+
+	// Setup constant force for 1 second duration
+	int effect_left = setConstantForce(duration, (powerLevel * 1000), HE::LEFT);
+
+	// flush queue
+	flushEventQueue(e, 1);
+	
+	// Get initial reading
+	SDL_JoystickUpdate();
+	Sint16 from = readWheelPosition();
+	profileLeft[powerLevel][index].from = from;
+	
+	// Start to move the wheel - SDL_Events should now be generated
+	runEffect(HE::CONSTANT_LEFT, 1);
+
+	clock_t start = clock();
+	bool timedOut = false;
+	profileLeft[powerLevel][index].timeStamp = start;
+
+	// Timeout or a position is obtained
+	Sint16 to = from;
+	while (to == from && !timedOut)
+	{
+		if ((clock() - start) >= 100) timedOut = true;
+		SDL_JoystickUpdate();
+		to = readWheelPosition();
+	}
+	
+	if (timedOut)
+	{
+		profileLeft[powerLevel][index].timedOut = true;
+		if (WHEEL_DEBUG_OUTPUT) std::cout << "Timedout! No Movement" << std::endl;
+		// TO SAVE PROFILE
+		SDL_Delay(1000);
+		return;
+	}
+
+	profileLeft[powerLevel][index].timeToMove = clock() - start;
+	profileLeft[powerLevel][index].to = to;
+
+	if (WHEEL_DEBUG_OUTPUT) std::cout << "From: " << profileLeft[powerLevel][index].from << " To: " << profileLeft[powerLevel][index].to << " Ttfm: " << profileLeft[powerLevel][index].timeToMove << " mS" << std::endl;
+	
+	// Get movement readings
+
+	SDL_Delay(1000);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //                     //
