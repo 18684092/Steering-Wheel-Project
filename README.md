@@ -1,6 +1,8 @@
 # Steering-Wheel-Project
 Haptic Steering Wheel
 
+NOTE: *** G27 Logitech driver - set to 900 degrees of rotation. No spring or centring. Everything to 100% ***
+
 Uses SDL2 libary - see http://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php for install
 
 Uses MS Visual Studio 2019

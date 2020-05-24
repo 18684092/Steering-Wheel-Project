@@ -64,6 +64,7 @@ void Wheel::profiler()
 			// flush queue
 			flushEventQueue(e, 1);
 
+			// TODO Minor bug on first use, ie don't use this for the 1st useRight
 			// We are centred - if the last powerLevel required a right offset then use it
 			if (useRight) moveRightByOffset(e, offsetDuration, i);
 
@@ -111,15 +112,8 @@ void Wheel::profiler()
 			std::cout << std::endl;
 		}
 
+		// Profile and record
 		profilePowerLevel(i, powerLevel, duration, offsetDuration, useRight);
-		// record movement
-
-		// move wheel right if needed
-		// set constantforce to left for 1 second at powerlevel * 1000
-		// record movement in 10mS intervals
-		// store in HE structure - presumably we'll save to file as well
-		// so we don't have to always go through a labourious process each time
-		
 
 		// Before next power level, just pause, helps to see whats going on
 		// visually - part of diagnostic testing and bug finding. It does no harm
@@ -149,6 +143,9 @@ void Wheel::profiler()
 void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32 duration,
 	const Uint32 offsetDuration, const bool useRight)
 {
+
+	// Works but needs rewriting
+
 	if (WHEEL_DEBUG_OUTPUT)
 	{
 		std::cout << "Profiling power level: " << (powerLevel * 1000) << " ";
@@ -288,6 +285,21 @@ void Wheel::moveRightByOffset(SDL_Event& e, const Uint32 offsetDuration, const i
 	flushEventQueue(e, 1);
 }
 
+// Move right by offset duration * i
+void Wheel::moveRightByOffset(const Uint32 offsetDuration, const int i)
+{
+	if (WHEEL_DEBUG_OUTPUT) std::cout << "Using right offset" << std::endl;
+
+	// Setup the force
+	int effect_right = setConstantForce(offsetDuration, HE::SAFE_POWER_LEVEL, HE::RIGHT);
+
+	// Run "i" times
+	runEffect(HE::CONSTANT_RIGHT, i);
+
+	// Delay by longer than "i" times
+	SDL_Delay(offsetDuration * (i + 1));
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //                           //
 // moveRightIncreaseOffset() //
@@ -307,26 +319,20 @@ void Wheel::moveRightIncreaseOffset(const Uint32 offsetDuration, int &i, const S
 		}
 	}
 
-	// Get to a known position
-	centre();
-
 	// Move a little more right than before
 	i += 1; // maybe +2?
 
-	// From now on use a right offset
-	useRight = true;
-
-	// Centre() over writes this	
-	int effect_right = setConstantForce(offsetDuration, HE::SAFE_POWER_LEVEL, HE::RIGHT);
+	// Get to a known position
+	centre();
 
 	// A little info is helpful
 	if (WHEEL_DEBUG_OUTPUT) std::cout << "Move right: " << i << std::endl;
 
-	// Move back more than before! Saves time.
-	runEffect(HE::CONSTANT_RIGHT, i);
+	// Physically move right
+	if (!useRight) moveRightByOffset(offsetDuration, i); 
 
-	// Wait for movement to finish
-	SDL_Delay(offsetDuration * (i + 1));
+	// From now on use a right offset
+	useRight = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -359,7 +365,6 @@ void Wheel::leftMostPositionWhenStopped(SDL_Event &e, Sint16 &min )
 	// Set to sensible defaults
 	Sint16 current = SDL_MIN_SINT16;	// wheel is centred - can't be here
 	Sint16 last = SDL_MAX_SINT16;		// Ditto
-
 
 	while (!stationary)
 	{
@@ -577,9 +582,7 @@ void Wheel::initEffect()
 // Wait till wheel stops moving
 bool Wheel::waitForNoMovement()
 {
-
 	// TODO check this function - seems to work sometimes but not all
-	// TODO use eventpolling is the way to go here
 
 	// Start timeout timer
 	std::clock_t start = std::clock();
@@ -610,6 +613,9 @@ bool Wheel::waitForNoMovement()
 
 void Wheel::centre()
 {
+	// TODO need to use variables for absolute positions so that we can deal with different power
+	// levels and different grees of roation
+
 	// Time of effect
 	Uint32 duration = 10;
 

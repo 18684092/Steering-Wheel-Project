@@ -53,6 +53,7 @@ private:
 	void moveRightByOffset(SDL_Event& e, const Uint32 offsetDuration, const int i);
 	void flushEventQueue(SDL_Event& e, const int eventType);
 	void moveRightIncreaseOffset(const Uint32 offsetDuration, int &i, const Sint16 min, bool &useRight);
+	void moveRightByOffset(const Uint32 offsetDuration, const int i);
 	void profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32 duration, const Uint32 offsetDuration, const bool useRight);
 
 	// Min holds the left most position when stopped - NOT the actual position
