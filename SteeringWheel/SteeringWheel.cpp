@@ -19,6 +19,7 @@ int main(int argc, char* args[])
 	bool profiling = false;
 
 	int effect_id;
+	int el;
 
 	// Time
 	std::clock_t start = 0;
@@ -26,37 +27,37 @@ int main(int argc, char* args[])
 	clock_t timeBetweenReadings = 10; // in milli seconds
 
 	//Create a wheel instance
-	Wheel wheel;
+	Wheel * wheel = new Wheel;
 
 	// Init SDL and find haptic abilities
-	wheel.init();
+	wheel->init();
 	
 	// Run tests on wheel 0
-	//wheel.hapticTest();
+	//wheel->hapticTest();
 
 	// Find min and max travel 
-	int el = wheel.setConstantForce(4000, 10000, HE::RIGHT);
-	effect_id = wheel.runEffect(HE::CONSTANT_RIGHT, 1);
-	wheel.findMaxWheelPosition();
+	/*el = wheel->setConstantForce(4000, HE::SAFE_POWER_LEVEL, HE::RIGHT);
+	effect_id = wheel->runEffect(HE::CONSTANT_RIGHT, 1);
+	wheel->findMaxWheelPosition();
 
-	el = wheel.setConstantForce(4000, 10000, HE::LEFT);
-	effect_id = wheel.runEffect(HE::CONSTANT_LEFT, 1);
+	el = wheel->setConstantForce(4000, HE::SAFE_POWER_LEVEL, HE::LEFT);
+	effect_id = wheel->runEffect(HE::CONSTANT_LEFT, 1);
 	SDL_Delay(4000);
 
-	el = wheel.setConstantForce(4000, 10000, HE::LEFT);
-	effect_id = wheel.runEffect(HE::CONSTANT_LEFT, 1);
+	el = wheel->setConstantForce(4000, HE::SAFE_POWER_LEVEL, HE::LEFT);
+	effect_id = wheel->runEffect(HE::CONSTANT_LEFT, 1);
 	
-	wheel.findMinWheelPosition();
+	wheel->findMinWheelPosition();*/
 
 
 	// Centre the wheel
-	wheel.centre();
+	//wheel->centre();
 
-	wheel.profiler();
+	wheel->profiler();
 
 
 	SDL_JoystickUpdate();
-	last = wheel.readWheelPosition();
+	last = wheel->readWheelPosition();
 
 	//Main loop flag
 	bool quit = false;
@@ -123,7 +124,7 @@ int main(int argc, char* args[])
 
 				// Wheel buttons
 				case SDL_JOYBUTTONDOWN:  
-					std::cout << "Button: " << (int)e.jbutton.button << " of " << (int)wheel.getNumberOfButtons() << " Position: " << wheel.readWheelPosition() << std::endl;
+					std::cout << "Button: " << (int)e.jbutton.button << " of " << (int)wheel->getNumberOfButtons() << " Position: " << wheel->readWheelPosition() << std::endl;
 						
 					// These buttons are on G27 gear stick and are red
 					if (e.jbutton.button == 0)
@@ -132,15 +133,15 @@ int main(int argc, char* args[])
 					}
 					if (e.jbutton.button == 1)
 					{
-						int el = wheel.setConstantForce(1000, power, HE::LEFT);
-						effect_id = wheel.runEffect(HE::CONSTANT_LEFT, 1);
+						el = wheel->setConstantForce(1000, power, HE::LEFT);
+						effect_id = wheel->runEffect(HE::CONSTANT_LEFT, 1);
 						profiling = true;
 						start = std::clock();							
 					}
 					if (e.jbutton.button == 2)
 					{
-						int el = wheel.setConstantForce(1000, power, HE::RIGHT);
-						effect_id = wheel.runEffect(HE::CONSTANT_RIGHT, 1);
+						el = wheel->setConstantForce(1000, power, HE::RIGHT);
+						effect_id = wheel->runEffect(HE::CONSTANT_RIGHT, 1);
 						profiling = true;
 						start = std::clock();
 					}
@@ -154,12 +155,19 @@ int main(int argc, char* args[])
 					// These buttons are on G27 Steering wheel
 					if (e.jbutton.button == 7)
 					{
-						wheel.centre();
+						wheel->centre();
 					}
 
 					if (e.jbutton.button == 20)
 					{
-						wheel.profiler();
+						//wheel.profiler();
+						el = wheel->setConstantForce(1000, power, HE::RIGHT);
+						effect_id = wheel->runEffect(HE::CONSTANT_RIGHT, 60);
+					}
+					if (e.jbutton.button == 22)
+					{
+						power -= 1000;
+						count = 0;
 					}
 					break;
 			}

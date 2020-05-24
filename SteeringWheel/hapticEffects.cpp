@@ -44,7 +44,7 @@ namespace HE
 		// Timer
 		std::clock_t start = std::clock();
 
-		while (std::clock() - start < 4000)
+		while ((std::clock() - start) < 4000)
 		{
 			SDL_PollEvent(&e);
 			if (e.type == SDL_JOYAXISMOTION)
@@ -73,7 +73,7 @@ namespace HE
 		// Timer
 		std::clock_t start = std::clock();
 
-		while (std::clock() - start < 4000)
+		while ((std::clock() - start) < 4000)
 		{
 			SDL_PollEvent(&e);
 			if (e.type == SDL_JOYAXISMOTION)
@@ -197,6 +197,7 @@ namespace HE
 		freeWheel = false;
 		timedOut = false;
 		timeToMove = NULL;
+		duration = NULL;
 	}
 
 	// Set direction property

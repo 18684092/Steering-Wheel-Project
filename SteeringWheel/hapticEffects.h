@@ -29,6 +29,8 @@ namespace HE
 	constexpr auto SAFE_POWER_LEVEL = 10000;
 	constexpr auto TOO_CLOSE_TO_END_STOP = 31000;
 	constexpr auto HIT_END_STOP = 32500;
+	constexpr auto PROFILE_UNITS = 200;
+	constexpr auto PROFILE_TIME_PERIOD = 10;
 
 	// Object holds profiling details
 	class Profile
@@ -42,6 +44,7 @@ namespace HE
 		Uint16 power; // level of effect
 		Sint16 distance; // how far moves
 		clock_t timeStamp; // Time reading was taken
+		clock_t duration;
 		bool freeWheel;
 		bool timedOut;
 		clock_t timeToMove; // time from command to 1st movement
@@ -66,10 +69,10 @@ namespace HE
 		SDL_HapticEffect effect;
 		SDL_Haptic* haptic = nullptr;
 		
-		std::map<int, int> effectsMap = {
-			{CONSTANT_LEFT, -1},
-			{CONSTANT_RIGHT, -1}
-		};
+		//std::map<int, int> effectsMap = {
+		//	{CONSTANT_LEFT, -1},
+		//	{CONSTANT_RIGHT, -1}
+		//};
 
 		int32_t maxPosition, minPosition; // stores max / min wheel position that was found
 		
@@ -86,9 +89,14 @@ namespace HE
 		SDL_Haptic* setHaptic(int device);
 
 		// Stores profile of power levels in 10 mS intervals
-		Profile profileLeft[MAX_POWER_LEVEL + 1][200];
-		Profile profileRight[MAX_POWER_LEVEL + 1][200];
+		Profile profileLeft[MAX_POWER_LEVEL + 1][PROFILE_UNITS];
+		Profile profileRight[MAX_POWER_LEVEL + 1][PROFILE_UNITS];
 		
+		std::map<int, int> effectsMap = {
+			{CONSTANT_LEFT, -1},
+			{CONSTANT_RIGHT, -1}
+		};
+
 		// Constructor
 		hapticEffects();
 	};

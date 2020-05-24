@@ -127,6 +127,8 @@ void Wheel::profiler()
 
 	} // end for loop
 
+	centre();
+
 	// The world moves too fast, just chill allow any movement to finish for certain
 	SDL_Delay(1000);
 
@@ -199,7 +201,7 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 		SDL_JoystickUpdate();
 		to = readWheelPosition();
 	}
-	
+
 	if (timedOut)
 	{
 		profileLeft[powerLevel][index].timedOut = true;
@@ -215,8 +217,50 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 	if (WHEEL_DEBUG_OUTPUT) std::cout << "From: " << profileLeft[powerLevel][index].from << " To: " << profileLeft[powerLevel][index].to << " Ttfm: " << profileLeft[powerLevel][index].timeToMove << " mS" << std::endl;
 	
 	// Get movement readings
+	from = to;
+	bool stationary = false;
+	bool running = true;
+	clock_t timePeriodStart = clock();
+	clock_t now;
+	while (!stationary)
+	{
+		now = clock();
+		// Are we at the end of a measurement time period?
+		if ((now - timePeriodStart) >= HE::PROFILE_TIME_PERIOD)
+		{
+			index++; 
+			profileLeft[powerLevel][index].from = to; // previous postion reading
+			
+			// Force event update
+			SDL_JoystickUpdate(); 
+			to = readWheelPosition();
 
-	SDL_Delay(1000);
+			profileLeft[powerLevel][index].to = to; // new position reading
+			profileLeft[powerLevel][index].duration = now - timePeriodStart;
+			profileLeft[powerLevel][index].timeStamp = now;
+			
+			// At some stage we stop - breakout
+			if (from == to) stationary = true;
+
+			from = to;
+			
+			// Are we freewheeling?
+			running = SDL_HapticGetEffectStatus(haptic, effectsMap[HE::CONSTANT_LEFT]);
+			profileLeft[powerLevel][index].freeWheel = (running == 0) ? true : false;
+
+			// Restart timer
+			timePeriodStart = clock();
+		}
+
+		SDL_Delay(1); // TODO It is possible we don't need this delay
+	}
+
+	if (WHEEL_DEBUG_OUTPUT)
+	{
+		std::cout << "Total time of movement: " << (profileLeft[powerLevel][index].timeStamp - profileLeft[powerLevel][0].timeStamp) << " mS" << std::endl;
+	}
+
+	SDL_Delay(500);
 }
 
 
