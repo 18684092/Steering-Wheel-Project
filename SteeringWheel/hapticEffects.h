@@ -19,7 +19,7 @@ namespace HE
 	constexpr auto LEFT = 1;
 	constexpr auto RIGHT = -1;
 	constexpr auto BAD_DIRECTION = 99;
-	constexpr auto BAD_PROFILE_INDEX = 99;
+	constexpr auto BAD_PROFILE_INDEX = -1;
 	constexpr auto MIN_DURATION = 10;
 	constexpr auto MIN_LEVEL = 0;
 	constexpr auto MAX_POWER_LEVEL = 32;
@@ -35,9 +35,10 @@ namespace HE
 	// Object holds profiling details
 	class Profile
 	{
+		// TODO make private
 	public:
 		Sint8 direction; // 1 means right, -1 means left
-		Sint8 reading; // reading number
+		int reading; // reading number
 		double delta; // rate of change
 		Sint16 from; // postion
 		Sint16 to; // position
@@ -49,7 +50,10 @@ namespace HE
 		bool timedOut;
 		clock_t timeToMove; // time from command to 1st movement
 
+
 	public:
+		// TODO add other setters
+		// TODO calculate delta and average power
 		Profile();
 
 		// Getters and Setters
@@ -89,8 +93,8 @@ namespace HE
 		SDL_Haptic* setHaptic(int device);
 
 		// Stores profile of power levels in 10 mS intervals
-		Profile profileLeft[MAX_POWER_LEVEL + 1][PROFILE_UNITS];
-		Profile profileRight[MAX_POWER_LEVEL + 1][PROFILE_UNITS];
+		Profile profileLeft[MAX_POWER_LEVEL + 1][PROFILE_UNITS + 1];
+		Profile profileRight[MAX_POWER_LEVEL + 1][PROFILE_UNITS + 1];
 		
 		std::map<int, int> effectsMap = {
 			{CONSTANT_LEFT, -1},

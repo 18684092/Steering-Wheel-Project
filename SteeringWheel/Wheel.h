@@ -5,7 +5,12 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <fstream>
+#include <algorithm>
 #include <ctype.h> // TODO do we need this?
+#include <sys/types.h> // fileinfo stuff
+#include <sys/stat.h> // fileinfo stuff
+#include <windows.h> // file saving stuff
 #include "hapticEffects.h"
 
 
@@ -24,6 +29,8 @@
 
 // TODO - check on inheritance access / public / protected etc
 
+// TODO - read in previous profile
+
 // Send debug output messages to console
 const bool WHEEL_DEBUG_OUTPUT = true;
 
@@ -35,7 +42,7 @@ const int MAX_WHEELS = 1;
 
 const uint8_t HAPTIC = 1;
 const uint8_t NON_HAPTIC = 2;
-const uint8_t ERROR = -1;
+//const uint8_t ERROR = -1; // ERROR is defined in windows.h
 const clock_t GENERAL_TIMEOUT = 1000;
 
 // Wheel inherits effects
@@ -60,6 +67,8 @@ private:
 	// because an end stop bounce may have happened
 	void leftMostPositionWhenStopped(SDL_Event& e, Sint16 &min);
 
+	std::string getExePath();
+
 	int uploadExecuteEffect();
 	SDL_HapticEffect effect;
 
@@ -72,6 +81,7 @@ public:
 	void centre();
 	bool waitForNoMovement();
 	void profiler();
+	void saveProfile(int direction);
 
 	// Multiple devices may or may not be haptic 
 	uint8_t deviceIndex[MAX_WHEELS]= { ERROR };			

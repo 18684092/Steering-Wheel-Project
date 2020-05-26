@@ -1,6 +1,5 @@
 #include "Wheel.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //            //
 // profiler() //
@@ -131,6 +130,8 @@ void Wheel::profiler()
 		std::cout << "Profiling wheel motor end" << std::endl;
 		std::cout << "-------------------------" << std::endl;
 	}
+
+	saveProfile(HE::LEFT); // could be right
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +145,8 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 	const Uint32 offsetDuration, const bool useRight)
 {
 
-	// Works but needs rewriting
+	// TODO Works but needs rewriting
+	// TODO is clock() the right measurement?
 
 	if (WHEEL_DEBUG_OUTPUT)
 	{
@@ -157,15 +159,9 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 		std::cout << std::endl;
 	}
 
-	//return; // TEMP - REMOVE
-
 	SDL_Event e;
 	int index = 0;
 
-	// Start Storing Profile Details
-	profileLeft[powerLevel][index].power = powerLevel;
-	profileLeft[powerLevel][index].reading = index;
-	
 	// Get to known starting position
 	centre();
 
@@ -181,14 +177,20 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 	// Get initial reading
 	SDL_JoystickUpdate();
 	Sint16 from = readWheelPosition();
-	profileLeft[powerLevel][index].from = from;
+
 	
 	// Start to move the wheel - SDL_Events should now be generated
 	runEffect(HE::CONSTANT_LEFT, 1);
 
 	clock_t start = clock();
 	bool timedOut = false;
+
+	// Start Storing Profile Details
+	profileLeft[powerLevel][index].power = powerLevel;
+	profileLeft[powerLevel][index].reading = index;
+	profileLeft[powerLevel][index].direction = HE::LEFT; // TODO needs to be also for right
 	profileLeft[powerLevel][index].timeStamp = start;
+	profileLeft[powerLevel][index].from = from;
 
 	// Timeout or a position is obtained
 	Sint16 to = from;
@@ -203,42 +205,52 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 	{
 		profileLeft[powerLevel][index].timedOut = true;
 		if (WHEEL_DEBUG_OUTPUT) std::cout << "Timedout! No Movement" << std::endl;
-		// TO SAVE PROFILE
-		SDL_Delay(1000);
+		SDL_Delay(500);
 		return;
 	}
 
 	profileLeft[powerLevel][index].timeToMove = clock() - start;
 	profileLeft[powerLevel][index].to = to;
+	profileLeft[powerLevel][index].distance = std::abs(from - to);
+	profileLeft[powerLevel][index].delta = std::abs(from - to);
 
-	if (WHEEL_DEBUG_OUTPUT) std::cout << "From: " << profileLeft[powerLevel][index].from << " To: " << profileLeft[powerLevel][index].to << " Ttfm: " << profileLeft[powerLevel][index].timeToMove << " mS" << std::endl;
-	
-	// Get movement readings
+	if (WHEEL_DEBUG_OUTPUT)
+	{
+		std::cout << "From: " << profileLeft[powerLevel][index].from << " To: " << profileLeft[powerLevel][index].to
+			<< " Ttfm: " << profileLeft[powerLevel][index].timeToMove << " mS" << std::endl;
+	}
+
 	from = to;
 	bool stationary = false;
 	bool running = true;
 	clock_t timePeriodStart = clock();
 	clock_t now;
+
+	// Get movement readings
 	while (!stationary)
 	{
-		now = clock();
 		// Are we at the end of a measurement time period?
+		now = clock();
 		if ((now - timePeriodStart) >= HE::PROFILE_TIME_PERIOD)
 		{
+			// Increase the profile index
 			index++; 
-			profileLeft[powerLevel][index].from = to; // previous postion reading
-			
+
+			profileLeft[powerLevel][index].from = to;
+			profileLeft[powerLevel][index].duration = now - timePeriodStart;
+			profileLeft[powerLevel][index].timeStamp = now;
+			profileLeft[powerLevel][index].power = powerLevel;
+			profileLeft[powerLevel][index].reading = index;
+			profileLeft[powerLevel][index].direction = HE::LEFT;
+
 			// Force event update
 			SDL_JoystickUpdate(); 
 			to = readWheelPosition();
+			profileLeft[powerLevel][index].to = to;
+			profileLeft[powerLevel][index].distance = std::abs(from - to);
 
-			profileLeft[powerLevel][index].to = to; // new position reading
-			profileLeft[powerLevel][index].duration = now - timePeriodStart;
-			profileLeft[powerLevel][index].timeStamp = now;
-			
 			// At some stage we stop - breakout
 			if (from == to) stationary = true;
-
 			from = to;
 			
 			// Are we freewheeling?
@@ -254,12 +266,95 @@ void Wheel::profilePowerLevel(const int i, const Uint16 powerLevel, const Uint32
 
 	if (WHEEL_DEBUG_OUTPUT)
 	{
-		std::cout << "Total time of movement: " << (profileLeft[powerLevel][index].timeStamp - profileLeft[powerLevel][0].timeStamp) << " mS" << std::endl;
+		std::cout << "Total time of movement: " << (profileLeft[powerLevel][index].timeStamp
+			- profileLeft[powerLevel][0].timeStamp) << " mS" << std::endl;
 	}
 
 	SDL_Delay(500);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//               //
+// saveProfile() //
+//               //
+///////////////////
+
+// Writes profileLeft / Right to files
+void Wheel::saveProfile(int direction)
+{
+	// TODO expand to save left and right profile
+	// TODO check folder, create folder
+	struct stat info;
+
+	// TODO get path properly
+	std::string exeName = "SteeringWheel.exe";
+	
+	// Get the name string
+	std::string n = SDL_JoystickName(wheel);
+	std::replace(n.begin(), n.end(), ' ', '_');
+
+	// Find path
+	std::string exePath = getExePath();
+	int pos = exePath.find(exeName);
+	exePath.erase(pos, exeName.size());
+	
+	for (int p = HE::MIN_POWER_LEVEL; p <= HE::MAX_POWER_LEVEL; ++p)
+	{
+		std::ofstream myFile;
+		
+		// Shouldnt build paths like this
+		std::string name = exePath + "Profile/" + n + "_" + std::to_string(p) + ".txt";
+		
+		if (WHEEL_DEBUG_OUTPUT) std::cout << "saving " << name << std::endl;
+		
+		myFile.open(name);
+		myFile << "Reading,Direction,To,From,Duration,Disatance,TimeStamp,TimeToMove,TimedOut,Delta,FreeWheel" << std::endl;
+		for (int i = 0; i <= HE::PROFILE_UNITS; ++i)
+		{
+			myFile << profileLeft[p][i].reading << ","
+				<< (int)profileLeft[p][i].direction << ","
+				<< profileLeft[p][i].to << ","
+				<< profileLeft[p][i].from << ","
+				<< profileLeft[p][i].duration << ","
+				<< profileLeft[p][i].distance << ","
+				<< profileLeft[p][i].timeStamp << ","
+				<< profileLeft[p][i].timeToMove << ","
+				<< profileLeft[p][i].timedOut << ","
+				<< profileLeft[p][i].delta << ","
+				<< profileLeft[p][i].freeWheel << std::endl;
+		}
+		myFile.close();
+	}
+
+//	char* path = new char[n.size() + 1];
+//	std::copy(n.begin(), n.end(), path);
+//	path[n.size()] = '\0';
+	
+
+
+//	std::cout << path << std::endl;
+
+// https://stackoverflow.com/questions/143174/how-do-i-get-the-directory-that-a-program-is-running-from
+// path needs to be full path and not relative
+//#include <string>
+//#include <windows.h>
+//
+//	std::string getexepath()
+//	{
+//		char result[MAX_PATH];
+//		return std::string(result, GetModuleFileName(NULL, result, MAX_PATH));
+//	}
+
+// https://stackoverflow.com/questions/18100097/portable-way-to-check-if-directory-exists-windows-linux-c
+//	if (stat(path, &info) != 0)
+//		printf("cannot access %s\n", path);
+//	else if (info.st_mode & S_IFDIR)   
+//		printf("%s is a directory\n", path);
+//	else
+//		printf("%s is no directory\n", path);
+//
+//	delete[] path;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //                     //
@@ -610,7 +705,7 @@ bool Wheel::waitForNoMovement()
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+// Centre the wheel
 void Wheel::centre()
 {
 	// TODO need to use variables for absolute positions so that we can deal with different power
@@ -887,4 +982,14 @@ void Wheel::init()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-
+// Returns full path with executable name
+std::string Wheel::getExePath()
+{
+	// MAX_PATH is in windows.h
+	char result[MAX_PATH];
+	
+	// Put path into result
+	GetModuleFileNameA(NULL, result, MAX_PATH);
+	
+	return std::string(result);
+}

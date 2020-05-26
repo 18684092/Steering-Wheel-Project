@@ -1,5 +1,6 @@
-﻿  hapticEffects.cpp
-  SteeringWheel.cpp
+﻿  SteeringWheel.cpp
   Wheel.cpp
+C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Wheel.cpp(287,14): warning C4101: 'info': unreferenced local variable
+  hapticEffects.cpp
   Generating Code...
   SteeringWheel.vcxproj -> C:\Users\Andy\OneDrive - University of Lincoln\level 2\Steering Wheel Project\SteeringWheel\Debug\SteeringWheel.exe
