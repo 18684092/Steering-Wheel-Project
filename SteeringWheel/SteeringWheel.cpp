@@ -1,186 +1,186 @@
+/*
+Author: Andy Perrett
+Email: andy@wired-wrong.co.uk
 
-// SDL includes
-#include <SDL.h>
-#include <iostream>
-#include <ctime>
+Version 0.1
+
+*/
+
 #include "Wheel.h"
+#include <ctime>
+#include <iostream>
 
-#define DEAD_LEFT 0
-#define DEAD_RIGHT 0
+// levels
+constexpr auto LEVEL8 = 8000;
+constexpr auto LEVEL10 = 10000;
+constexpr auto LEVEL32 = 32000;
+constexpr auto LEVEL20 = 20000;
+constexpr auto LEVEL15 = 15000;
 
-int main(int argc, char* args[])
+
+// Name the Wheel we want to use (G27 or Steering) 
+constexpr auto NAME = "G27";
+constexpr auto TIMEOUT = 120000;
+
+
+int main(int argc, char** argv)
 {
-	// Last position
-	int last = 0;
-	int current = 0;
+    std::cout << "Plug in haptic wheel within 2 minutes..." << std::endl;
 
-	int power = 0;
-	int count = 0;
-	bool profiling = false;
+    // Wait for haptic wheel to be plugged in
+    bool found = false;
+    clock_t start = clock();
+    while (!found)
+    {
+        // Create a wheel object
+        Wheel* test = new Wheel(NAME);
+        if (test->validDevice() && test->validHaptic()) found = true;
+        //test->wait(1000);
+        delete test;
+        clock_t now = clock();
+        if (now - start >= TIMEOUT && !found) break;
+    }
 
-	int effect_id;
-	int el;
+    // We have a device
+    if (found)
+    {
+        Wheel* wheel = new Wheel(NAME, true);
+        if (wheel->validDevice() && wheel->validHaptic())
+        {
+            //wheel->getGain();
+            //wheel->setGain(50);
+            //wheel->getGain();
+            //wheel->getMaxGain();
+            //wheel->wait(3000);
+            wheel->calibrate();
 
-	// Time
-	std::clock_t start = 0;
-	clock_t duration = 0;
-	clock_t timeBetweenReadings = 10; // in milli seconds
+            //wheel->wait(2000);
 
-	//Create a wheel instance
-	Wheel * wheel = new Wheel;
+            //wheel->setMaxGain(100);
+            //wheel->setGain(100);
+            //wheel->profile();
+            /*
+            wheel->gotoAngle(340);
+            wheel->setRampLeft(1000, L32, 0);
+            wheel->setRampRight(1000, 0, L32);
+            wheel->setSine(FOREVER, 120, 20000, DOWN);
+            wheel->runEffect(RAMP_LEFT);
+            wheel->wait(1500);
+            wheel->runEffect(RAMP_RIGHT);
+            //wheel->runEffect(SINE);
+            wheel->wait(2000); // 2 seconds
+            wheel->gotoAngle(90);
+            wheel->wait(2000);
+            wheel->gotoAngleSlow(-120);
+            */
+            //wheel->setLeft(5000, 8000);
+            //wheel->setDamper(FOREVER, 0, 20000 , 20000, -10000, -10000, 100, 100);
+            //wheel->setSpring(FOREVER, 0, 32000, 32000, 32000, 32000, 500, 0);
+            //wheel->runEffect(LEFT);
+            //wheel->wait(3000);
+            //wheel->setInertia(FOREVER, 0, 32000, 32000, 32000, 32000);
+            //wheel->setInertia(FOREVER, 0, 10000, 10000, 10000, 10000);
+            //wheel->setFriction(FOREVER, 0, 10000, 10000, 20000, 20000);
+            //wheel->setSine(FOREVER, 120, 20000, DOWN);
+            //wheel->setTriangle(FOREVER, 150, 8000, DOWN);
+            //wheel->setSawUp(FOREVER, 150, 8000, DOWN);
+            //wheel->runEffect(SPRING);
+            //wheel->runEffect(SPRING);
+            //wheel->runEffect(DAMPER);
+            //wheel->runEffect(SPRING);
+            //wheel->wait(1000);
 
-	// Init SDL and find haptic abilities
-	wheel->init();
-	
-	// Run tests on wheel 0
-	//wheel->hapticTest();
-
-	// Find min and max travel 
-	/*el = wheel->setConstantForce(4000, HE::SAFE_POWER_LEVEL, HE::RIGHT);
-	effect_id = wheel->runEffect(HE::CONSTANT_RIGHT, 1);
-	wheel->findMaxWheelPosition();
-
-	el = wheel->setConstantForce(4000, HE::SAFE_POWER_LEVEL, HE::LEFT);
-	effect_id = wheel->runEffect(HE::CONSTANT_LEFT, 1);
-	SDL_Delay(4000);
-
-	el = wheel->setConstantForce(4000, HE::SAFE_POWER_LEVEL, HE::LEFT);
-	effect_id = wheel->runEffect(HE::CONSTANT_LEFT, 1);
-	
-	wheel->findMinWheelPosition();*/
-
-
-	// Centre the wheel
-	//wheel->centre();
-
-	wheel->profiler();
-
-
-	SDL_JoystickUpdate();
-	last = wheel->readWheelPosition();
-
-	//Main loop flag
-	bool quit = false;
-
-	//Event handler
-	SDL_Event e;
-	start = std::clock();
-	//While application is running
-	while (!quit)
-	{
-			
-		//Handle events on queue
-		while (SDL_PollEvent(&e) != 0)
-		{
-			// Time now
-			clock_t now = clock();
-			
-			////////////
-			// Events //
-			////////////
-			switch (e.type)
-			{
-				// Keyboard
-				case SDL_KEYDOWN:
-					// News a window opening for this event to work
-					break;
-
-				// QUIT
-				case SDL_QUIT:
-					quit = true;
-					break;
-
-				// Motion x axis has been triggered
-				case SDL_JOYAXISMOTION:
-					if ((e.jaxis.value < DEAD_LEFT) || (e.jaxis.value > DEAD_RIGHT))
-					{
-						if (e.jaxis.axis == 0)
-						{
-		
-							// Duration in seconds
-							duration = (now - start);
-
-							// Get wheels position
-							//current = wheel.readWheelPosition();
-							current = e.jaxis.value;
-
-							// Test duration
-							if (duration >= timeBetweenReadings)
-							{
-								count++;
-								std::cout << count << " F: " << power << " P: " << current << " L: " << last << " T: " << duration << "mS" << " D: " << (last - current) << " Time: " << now << std::endl;
-								//std::cout << count << "," << power << "," << current << "," << last << "," << duration << "," << std::abs(last - current) << "," << now << std::endl;
-
-								// Reset Clock
-								start = std::clock();
-
-								// Store position
-								last = current;
-							}
-						}
-
-					}
-					break;
-
-				// Wheel buttons
-				case SDL_JOYBUTTONDOWN:  
-					std::cout << "Button: " << (int)e.jbutton.button << " of " << (int)wheel->getNumberOfButtons() << " Position: " << wheel->readWheelPosition() << std::endl;
-						
-					// These buttons are on G27 gear stick and are red
-					if (e.jbutton.button == 0)
-					{
-						quit = true;
-					}
-					if (e.jbutton.button == 1)
-					{
-						el = wheel->setConstantForce(1000, power, HE::LEFT);
-						effect_id = wheel->runEffect(HE::CONSTANT_LEFT, 1);
-						profiling = true;
-						start = std::clock();							
-					}
-					if (e.jbutton.button == 2)
-					{
-						el = wheel->setConstantForce(1000, power, HE::RIGHT);
-						effect_id = wheel->runEffect(HE::CONSTANT_RIGHT, 1);
-						profiling = true;
-						start = std::clock();
-					}
-					if (e.jbutton.button == 3)
-					{
-						power += 1000;
-						count = 0;
-							
-					}
-
-					// These buttons are on G27 Steering wheel
-					if (e.jbutton.button == 7)
-					{
-						wheel->centre();
-					}
-
-					if (e.jbutton.button == 20)
-					{
-						//wheel.profiler();
-						el = wheel->setConstantForce(1000, power, HE::RIGHT);
-						effect_id = wheel->runEffect(HE::CONSTANT_RIGHT, 60);
-					}
-					if (e.jbutton.button == 22)
-					{
-						power -= 1000;
-						count = 0;
-					}
-					break;
-			}
+            //wheel->runEffect(SINE);
+            //wheel->gotoAngle(0);
+            //wheel->setLeft(500, L32);
+            //wheel->runEffect(LEFT, 1);
+            //wheel->wait(250);
+            //wheel->getDistance(10);
+            //wheel->setGain(100);
+            //wheel->wait(5000);
 
 
-		}
-		//SDL_Delay(30);
-	}
+            //wheel->setMaxGain(55);
+            //wheel->getMaxGain();
+           // wheel->setGain(100);
+            //
+            /*
+            wheel->runEffect(DAMPER, 1);
+            wheel->gotoAngle(38);
+            wheel-> wait(2000);
+            wheel->gotoAngle(-90);
+            wheel->wait(2000);
+            wheel->gotoAngle(90);
+            wheel->wait(2000);
+            wheel->gotoAngleSlow(-120);
+            wheel->wait(2000);
+            wheel->gotoAngleFast(0);
+            wheel->wait(2000);
+            wheel->gotoAngleFast(-120);
+            wheel->wait(2000);
+            wheel->gotoAngleFast(90);
+            wheel->wait(2000);
+            wheel->gotoAngleSlow(0);
+            wheel->wait(2000);
+            wheel->gotoAngleSlow(1);
+            wheel->wait(2000);
+            wheel->gotoAngle(2);
+            wheel->wait(2000);
+            wheel->gotoAngleFast(3);
+            wheel->wait(2000);
+            wheel->gotoAngleFast(0);
+            wheel->wait(1000);
+            */
+
+            wheel->setDamper(FOREVER, 0, 32000, 32000, 10000, 10000, 0, wheel->getCentre());
+            wheel->runEffect(DAMPER);
+            wheel->setSpring(FOREVER, 0, 25000, 25000, 25000, 25000, 0, wheel->getCentre());
+            wheel->runEffect(SPRING);
+            wheel->setRight(FOREVER, 32000);
+            wheel->setSine(FOREVER, 50, 20000, DOWN);
+            wheel->setRampRight(1000, 32000, 10000);
+            int last = 0;
+            int now = 0;
+            bool backstop = false;
+            bool done = false;
+            while (!done)
+            {
+                now = wheel->getPosition();
+
+                if (last != now)
+                {
+                    std::cout << "Position: " << now << std::endl;
+                    //std::cout << "Angle   : " << wheel->getAngle() << std::endl;
+
+                    if (now < wheel->calculatePosition(-30) && !backstop)
+                    {
+                        wheel->runEffect(RAMP_RIGHT);
+                        //->runEffect(SINE);
+                        backstop = true;
+                    }
+                    if (now > wheel->calculatePosition(-30) && backstop)
+                    {
+                        backstop = false;
+                        wheel->stopEffect(RAMP_RIGHT);
+                        //wheel->stopEffect(SINE);
+
+                    }
+
+                }
+                last = now;
 
 
+            }
 
-	return 0;
+
+            wheel->wait(20000);
+
+            delete wheel;
+        }
+    }
+    // Timedout - no usable device
+    else std::cout << "TIMEOUT : No device " << std::endl;
+
+    return 0;
 }
-
-
 
